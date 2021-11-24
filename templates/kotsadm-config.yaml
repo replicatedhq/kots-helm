@@ -8,5 +8,5 @@ data:
   initial-app-images-pushed: "false"
   minio-enabled-snapshots: "false"
   registry-is-read-only: "false"
-  skip-preflights: "false"
+  skip-preflights: {{ .Values.kotsadm.automation.skipPreflights | quote }}
 

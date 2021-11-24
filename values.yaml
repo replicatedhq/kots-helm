@@ -4,9 +4,11 @@
 
 kotsadm:
   kotsadmPassword: ""
-  license:
-    slug: ""
-    data: ""
+  automation:
+    license:
+      slug: ""
+      data: ""
+    skipPreflights: false
 
 imagePullSecrets: []
 nameOverride: ""
