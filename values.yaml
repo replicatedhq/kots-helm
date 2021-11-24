@@ -4,6 +4,9 @@
 
 kotsadm:
   kotsadmPassword: ""
+  license:
+    slug: ""
+    data: ""
 
 imagePullSecrets: []
 nameOverride: ""

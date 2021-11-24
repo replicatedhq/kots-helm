@@ -1,0 +1,15 @@
+{{ if .Values.kotsadm.license.slug }}
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    kots.io/airgap: "false"
+  labels:
+    kots.io/app: {{ .Values.kotsadm.license.slug }}
+    kots.io/automation: license
+    {{- include "kots-helm.labels" . | nindent 4 }}
+  name: kotsadm-default-license
+type: Opaque
+data:
+  license: {{ .Values.kotsadm.license.data | b64enc }}
+{{ end }}
