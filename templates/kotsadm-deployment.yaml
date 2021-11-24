@@ -116,10 +116,6 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          privileged: false
-          readOnlyRootFilesystem: true
         volumeMounts:
         - mountPath: /backup
           name: backup
@@ -140,7 +136,7 @@ spec:
             secretKeyRef:
               key: uri
               name: kotsadm-postgres
-        image: kotsadm/kotsadm-migrations:v1.56.0
+        image: kotsadm/kotsadm-migrations:v1.57.0
         imagePullPolicy: IfNotPresent
         name: schemahero-plan
         resources:
@@ -150,10 +146,6 @@ spec:
           requests:
             cpu: 50m
             memory: 50Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          privileged: false
-          readOnlyRootFilesystem: true
         volumeMounts:
         - mountPath: /migrations
           name: migrations
@@ -169,7 +161,7 @@ spec:
             secretKeyRef:
               key: uri
               name: kotsadm-postgres
-        image: kotsadm/kotsadm-migrations:v1.56.0
+        image: kotsadm/kotsadm-migrations:v1.57.0
         imagePullPolicy: IfNotPresent
         name: schemahero-apply
         resources:
@@ -179,10 +171,6 @@ spec:
           requests:
             cpu: 50m
             memory: 50Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          privileged: false
-          readOnlyRootFilesystem: true
         volumeMounts:
         - mountPath: /migrations
           name: migrations
@@ -194,7 +182,7 @@ spec:
             secretKeyRef:
               key: password
               name: kotsadm-postgres
-        image: kotsadm/kotsadm:v1.56.0
+        image: kotsadm/kotsadm:v1.57.0
         imagePullPolicy: IfNotPresent
         name: restore-db
         resources:
@@ -228,7 +216,7 @@ spec:
               name: kotsadm-minio
         - name: S3_BUCKET_ENDPOINT
           value: "true"
-        image: kotsadm/kotsadm:v1.56.0
+        image: kotsadm/kotsadm:v1.57.0
         imagePullPolicy: IfNotPresent
         name: restore-s3
         resources:
@@ -238,23 +226,13 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          privileged: false
-          readOnlyRootFilesystem: true
         volumeMounts:
         - mountPath: /backup
           name: backup
       restartPolicy: Always
       securityContext:
         fsGroup: 1001
-        runAsGroup: 1001
-        runAsNonRoot: true
         runAsUser: 1001
-        seccompProfile:
-          type: RuntimeDefault
-        supplementalGroups:
-        - 1001
       serviceAccountName: kotsadm
       volumes:
       - emptyDir:

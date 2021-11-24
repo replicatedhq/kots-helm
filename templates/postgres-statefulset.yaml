@@ -61,10 +61,6 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          privileged: false
-          readOnlyRootFilesystem: true
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: kotsadm-postgres
@@ -77,13 +73,7 @@ spec:
           subPath: passwd
       securityContext:
         fsGroup: 999
-        runAsGroup: 999
-        runAsNonRoot: true
         runAsUser: 999
-        seccompProfile:
-          type: RuntimeDefault
-        supplementalGroups:
-        - 999
       volumes:
       - name: kotsadm-postgres
         persistentVolumeClaim:
