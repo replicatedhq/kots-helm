@@ -1,0 +1,12 @@
+{{ if .Values.kotsadm.automation.config.values }}
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    kots.io/automation: configvalues
+    {{- include "kots-helm.labels" . | nindent 4 }}
+  name: kotsadm-default-configvalues
+type: Opaque
+data:
+  configvalues: {{ .Values.kotsadm.automation.config.values | b64enc }}
+{{ end }}

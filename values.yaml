@@ -9,6 +9,8 @@ kotsadm:
       slug: ""
       data: ""
     skipPreflights: false
+    config:
+      values: ""
 
 imagePullSecrets: []
 nameOverride: ""

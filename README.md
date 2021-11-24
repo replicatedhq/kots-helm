@@ -26,10 +26,21 @@ If you want to automatically install the kots license, you can do so by setting 
 ```shell
     helm upgrade --install [RELEASE_NAME] . --namespace [NAMESPACE] --create-namespace \
         --set kotsadm.kotsadmPassword=[KOTSADM_PASSWORD] \
-        --set kotsadm.license.slug=[APP_SLUG] \
-        --set kotsadm.liccense.data="$(cat [PATH_TO_LICENSE_YAML])"
+        --set kotsadm.automation.license.slug=[APP_SLUG] \
+        --set kotsadm.automation.license.data="$(cat [PATH_TO_LICENSE_YAML])"
     kubectl port-forward -n [NAMESPACE] svc/kotsadm 8800:3000
 ```
 
 If you want to skip pre-flights, you can do so by setting the following value:
 * `kotsadm.automation.skipPreflights` (default: `false`)
+
+If you want to specify ConfigValues, you can do so by setting the `kotsadm.automation.config.values`:
+
+```shell
+    helm upgrade --install [RELEASE_NAME] . --namespace [NAMESPACE] --create-namespace \
+        --set kotsadm.kotsadmPassword=[KOTSADM_PASSWORD] \
+        --set kotsadm.automation.license.slug=[APP_SLUG] \
+        --set kotsadm.automation.license.data="$(cat [PATH_TO_LICENSE_YAML])" \
+        --set kotsadm.automation.config.values="$(cat [PATH_TO_CONFIG_YAML])"
+    kubectl port-forward -n [NAMESPACE] svc/kotsadm 8800:3000
+```
