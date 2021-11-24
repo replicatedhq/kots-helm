@@ -1,3 +1,12 @@
+# Intro
+
+**Note**: This is not an officially supported way of installing kots. If you're looking for using this in a supported way, check the [kots documentation](https://kots.io/kotsadm/installing/installing-a-kots-app/)
+
+
+This helm chart allows installing a Replicated kots application by installing kostadm, and automating the install process using helm values.
+
+
+
 # Usage
 
 ## UI based install 
