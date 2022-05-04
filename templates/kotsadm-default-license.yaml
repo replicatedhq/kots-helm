@@ -7,7 +7,7 @@ metadata:
   labels:
     kots.io/app: {{ .Values.kotsadm.automation.license.slug }}
     kots.io/automation: license
-    {{- include "kots-helm.labels" . | nindent 4 }}
+    {{- include "admin-console.labels" . | nindent 4 }}
   name: kotsadm-default-license
 type: Opaque
 data:
