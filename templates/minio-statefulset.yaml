@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    {{- include "kots-helm.labels" . | nindent 4 }}
+    {{- include "admin-console.labels" . | nindent 4 }}
   name: kotsadm-minio
 spec:
   selector:
@@ -15,7 +15,7 @@ spec:
         backup.velero.io/backup-volumes: kotsadm-minio,minio-config-dir,minio-cert-dir
       labels:
         app: kotsadm-minio
-        {{- include "kots-helm.labels" . | nindent 8 }}
+        {{- include "admin-console.labels" . | nindent 8 }}
     spec:
       containers:
       - command:
@@ -104,7 +104,7 @@ spec:
   volumeClaimTemplates:
   - metadata:
       labels:
-        {{- include "kots-helm.labels" . | nindent 8 }}
+        {{- include "admin-console.labels" . | nindent 8 }}
       name: kotsadm-minio
     spec:
       accessModes:
@@ -113,5 +113,3 @@ spec:
         requests:
           storage: 4Gi
     status: {}
-status:
-  replicas: 0

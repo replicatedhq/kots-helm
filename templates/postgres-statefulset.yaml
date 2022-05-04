@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   labels:
-    {{- include "kots-helm.labels" . | nindent 4 }}
+    {{- include "admin-console.labels" . | nindent 4 }}
   name: kotsadm-postgres
 spec:
   selector:
@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         app: kotsadm-postgres
-        {{- include "kots-helm.labels" . | nindent 8 }}
+        {{- include "admin-console.labels" . | nindent 8 }}
     spec:
       containers:
       - env:
@@ -93,7 +93,7 @@ spec:
   volumeClaimTemplates:
   - metadata:
       labels:
-        {{- include "kots-helm.labels" . | nindent 8 }}
+        {{- include "admin-console.labels" . | nindent 8 }}
       name: kotsadm-postgres
     spec:
       accessModes:
@@ -102,5 +102,3 @@ spec:
         requests:
           storage: 1Gi
     status: {}
-status:
-  replicas: 0

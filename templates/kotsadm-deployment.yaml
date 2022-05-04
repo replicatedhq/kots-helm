@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    {{- include "kots-helm.labels" . | nindent 4 }}
+    {{- include "admin-console.labels" . | nindent 4 }}
   name: kotsadm
 spec:
   selector:
@@ -18,7 +18,7 @@ spec:
       creationTimestamp: null
       labels:
         app: kotsadm
-        {{- include "kots-helm.labels" . | nindent 8 }}
+        {{- include "admin-console.labels" . | nindent 8 }}
     spec:
       affinity:
         nodeAffinity:
