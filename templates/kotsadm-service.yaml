@@ -14,20 +14,3 @@ spec:
   type: ClusterIP
 status:
   loadBalancer: {}
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    {{- include "admin-console.labels" . | nindent 4 }}
-  name: kotsadm-web
-spec:
-  ports:
-  - name: http
-    port: 8800
-    nodePort: 3000
-  selector:
-    app: kotsadm
-  type: LoadBalancer
-status:
-  loadBalancer: {}
