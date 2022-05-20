@@ -3,14 +3,14 @@ kind: Service
 metadata:
   labels:
     {{- include "admin-console.labels" . | nindent 4 }}
-  name: kotsadm
+  name: {{ include "admin-console.fullname" . }}
 spec:
   ports:
   - name: http
     port: 3000
-    targetPort: http
+    targetPort: 3000
   selector:
     app: kotsadm
-  type: ClusterIP
+  type: {{ .Values.service.type }}
 status:
   loadBalancer: {}
