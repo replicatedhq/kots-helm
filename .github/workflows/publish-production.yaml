@@ -1,0 +1,24 @@
+name: publish-production
+on:
+  push:
+    tags:
+      - "*"
+jobs:
+  package-and-publish:
+    runs-on: 'ubuntu-20.04'
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: v3.8.1
+    - name: Run Package and Publish
+      env: 
+        HELM_USER: ${{secrets.KOTS_HELM_USER_PROD}}
+        HELM_PASS: ${{secrets.KOTS_HELM_PASS_PROD}}
+      run: |
+        export CHART_NAME=`helm package . | rev | cut -d/ -f1 | rev`
+        echo pushing ${CHART_NAME} to production
+        helm registry login registry.replicated.com  --username $HELM_USER --password $HELM_PASS
+        helm push $CHART_NAME oci://registry.replicated.com/library
