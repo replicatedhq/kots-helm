@@ -95,7 +95,9 @@ spec:
         - name: HTTPS_PROXY
         - name: NO_PROXY
           value: kotsadm-postgres,kotsadm-minio,kotsadm-api-node
-        image: kotsadm/kotsadm:v1.57.0
+        - name: IS_HELM_MANAGED
+          value: "true"
+        image: kotsadm/kotsadm:alpha
         imagePullPolicy: IfNotPresent
         name: kotsadm
         ports:
@@ -182,7 +184,7 @@ spec:
             secretKeyRef:
               key: password
               name: kotsadm-postgres
-        image: kotsadm/kotsadm:v1.57.0
+        image: kotsadm/kotsadm:alpha
         imagePullPolicy: IfNotPresent
         name: restore-db
         resources:
@@ -216,7 +218,7 @@ spec:
               name: kotsadm-minio
         - name: S3_BUCKET_ENDPOINT
           value: "true"
-        image: kotsadm/kotsadm:v1.57.0
+        image: kotsadm/kotsadm:alpha
         imagePullPolicy: IfNotPresent
         name: restore-s3
         resources:

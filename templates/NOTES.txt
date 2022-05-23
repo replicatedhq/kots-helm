@@ -7,8 +7,11 @@
 {{- end }}
 {{- else if contains "NodePort" .Values.service.type }}
   export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "admin-console.fullname" . }})
-  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
-  echo http://$NODE_IP:$NODE_PORT
+  Create an external IP for your NodePort service.  This IP should be the public IP address of your instance.  Add the IP under spec.externalIPs
+  kubectl edit svc admin-console --namespace {{ .Release.Namespace }}
+  Ensure your security group allows for inbound requests on $NODE_PORT
+  export EXTERNAL_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "admin-console.fullname" . }} -o jsonpath="{.spec.externalIPs[0]}")
+  echo http://$EXTERNAL_IP:$NODE_PORT
 {{- else if contains "LoadBalancer" .Values.service.type }}
      NOTE: It may take a few minutes for the LoadBalancer IP to be available.
            You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "admin-console.fullname" . }}'
@@ -20,3 +23,5 @@
   echo "Visit http://127.0.0.1:8080 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
+To retrieve the password for KOTS admin console run: 
+  kubectl get secret kotsadm-password -o jsonpath='{.data.passwordB64}' | base64 -d
