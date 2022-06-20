@@ -98,7 +98,7 @@ spec:
         - name: IS_HELM_MANAGED
           value: "true"
         image: kotsadm/kotsadm:alpha
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: kotsadm
         ports:
         - containerPort: 3000
