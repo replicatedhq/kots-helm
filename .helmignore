@@ -1,0 +1,3 @@
+build-local.sh
+/*.yaml.tmpl
+/.image.env

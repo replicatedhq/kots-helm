@@ -28,7 +28,7 @@ spec:
               name: kotsadm-postgres
         - name: POSTGRES_DB
           value: kotsadm
-        image: postgres:10.18-alpine
+        image: {{ .Values.adminConsole.images.postgres }}
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:

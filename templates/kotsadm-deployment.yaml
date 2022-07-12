@@ -97,8 +97,8 @@ spec:
           value: kotsadm-postgres,kotsadm-minio,kotsadm-api-node
         - name: IS_HELM_MANAGED
           value: "true"
-        image: kotsadm/kotsadm:alpha
-        imagePullPolicy: Always
+        image: {{ .Values.adminConsole.images.kotsadm }}
+        imagePullPolicy: IfNotPresent
         name: kotsadm
         ports:
         - containerPort: 3000
@@ -138,7 +138,7 @@ spec:
             secretKeyRef:
               key: uri
               name: kotsadm-postgres
-        image: kotsadm/kotsadm-migrations:v1.57.0
+        image: {{ .Values.adminConsole.images.migrations }}
         imagePullPolicy: IfNotPresent
         name: schemahero-plan
         resources:
@@ -163,7 +163,7 @@ spec:
             secretKeyRef:
               key: uri
               name: kotsadm-postgres
-        image: kotsadm/kotsadm-migrations:v1.57.0
+        image: {{ .Values.adminConsole.images.migrations }}
         imagePullPolicy: IfNotPresent
         name: schemahero-apply
         resources:
@@ -184,7 +184,7 @@ spec:
             secretKeyRef:
               key: password
               name: kotsadm-postgres
-        image: kotsadm/kotsadm:alpha
+        image: {{ .Values.adminConsole.images.kotsadm }}
         imagePullPolicy: IfNotPresent
         name: restore-db
         resources:
@@ -218,7 +218,7 @@ spec:
               name: kotsadm-minio
         - name: S3_BUCKET_ENDPOINT
           value: "true"
-        image: kotsadm/kotsadm:alpha
+        image: {{ .Values.adminConsole.images.kotsadm }}
         imagePullPolicy: IfNotPresent
         name: restore-s3
         resources:
