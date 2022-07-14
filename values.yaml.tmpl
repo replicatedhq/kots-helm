@@ -2,8 +2,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-kotsadm:
-  kotsadmPassword: ""
+adminConsole:
+  password: ""
   automation:
     license:
       slug: ""
@@ -11,6 +11,11 @@ kotsadm:
     skipPreflights: false
     config:
       values: ""
+    images:
+      kotsadm: kotsadm/kotsadm:${KOTS_TAG}
+      migrations: kotsadm/kotsadm-migrations:${KOTS_TAG}
+      minio: minio/minio:${MINIO_TAG}
+      postgres: postgres:${POSTGRES_ALPINE_TAG}
 
 imagePullSecrets: []
 nameOverride: ""

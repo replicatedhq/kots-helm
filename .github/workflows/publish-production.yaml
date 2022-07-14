@@ -2,11 +2,18 @@ name: publish-production
 on:
   push:
     tags:
-      - "*"
+    - 'v[0-9]+.[0-9]+.[0-9]+'
+    - 'v[0-9]+.[0-9]+.[0-9]+\-build\.[0-9]+'
+
 jobs:
   package-and-publish:
     runs-on: 'ubuntu-20.04'
     steps:
+    - name: Get tag
+      id: tag
+      uses: dawidd6/action-get-tag@v1
+      with:
+        strip_v: true
     - name: Checkout
       uses: actions/checkout@v2
     - name: Install Helm
@@ -17,7 +24,23 @@ jobs:
       env: 
         HELM_USER: ${{secrets.KOTS_HELM_USER_PROD}}
         HELM_PASS: ${{secrets.KOTS_HELM_PASS_PROD}}
+        CHART_VERSION: ${{steps.tag.outputs.tag}}
       run: |
+        export KOTS_VERSION=${CHART_VERSION%-*}
+        export KOTS_TAG=v${KOTS_VERSION}
+
+        export LATEST_KOTS_TAG=`curl https://api.github.com/repos/replicatedhq/kots/releases/latest | jq -r .tag_name`
+        if [[ "$KOTS_TAG" != "$LATEST_KOTS_TAG" ]]; then
+          echo "Latest KOTS tag is ${LATEST_KOTS_TAG}, but this tag is ${KOTS_TAG}"
+          exit -1
+        fi
+
+        curl -O -L https://raw.githubusercontent.com/replicatedhq/kots/${KOTS_TAG}/.image.env
+        export $(cat .image.env | sed 's/#.*//g' | xargs)
+        envsubst < Chart.yaml.tmpl > Chart.yaml
+        envsubst < values.yaml.tmpl > values.yaml
+        rm -f *.tmpl
+
         export CHART_NAME=`helm package . | rev | cut -d/ -f1 | rev`
         echo pushing ${CHART_NAME} to production
         helm registry login registry.replicated.com  --username $HELM_USER --password $HELM_PASS
