@@ -3,6 +3,11 @@
 # Declare variables to be passed into your templates.
 
 adminConsole:
+  images:
+    kotsadm: kotsadm/kotsadm:${KOTS_TAG}
+    migrations: kotsadm/kotsadm-migrations:${KOTS_TAG}
+    minio: minio/minio:${MINIO_TAG}
+    postgres: postgres:${POSTGRES_ALPINE_TAG}
   password: ""
   automation:
     license:
@@ -11,11 +16,6 @@ adminConsole:
     skipPreflights: false
     config:
       values: ""
-    images:
-      kotsadm: kotsadm/kotsadm:${KOTS_TAG}
-      migrations: kotsadm/kotsadm-migrations:${KOTS_TAG}
-      minio: minio/minio:${MINIO_TAG}
-      postgres: postgres:${POSTGRES_ALPINE_TAG}
 
 imagePullSecrets: []
 nameOverride: ""
