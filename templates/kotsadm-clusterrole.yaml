@@ -1,6 +1,6 @@
-{{ if .Values.adminConsole.minimalRBAC }}
+{{ if not .Values.adminConsole.minimalRBAC }}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
   labels:
     {{- include "admin-console.labels" . | nindent 4 }}
