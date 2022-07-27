@@ -50,6 +50,7 @@ spec:
             secretKeyRef:
               key: key
               name: kotsadm-session
+{{ if not .Values.adminConsole.isHelmManaged }}
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -60,6 +61,7 @@ spec:
             secretKeyRef:
               key: uri
               name: kotsadm-postgres
+{{ end }}
         - name: POD_NAMESPACE
           valueFrom:
             fieldRef:
@@ -75,6 +77,7 @@ spec:
           value: http://kotsadm.{{ .Release.Namespace }}.svc.cluster.local:3000
         - name: API_ADVERTISE_ENDPOINT
           value: http://localhost:8800
+{{ if not .Values.adminConsole.isHelmManaged }}
         - name: S3_ENDPOINT
           value: http://kotsadm-minio:9000
         - name: S3_BUCKET_NAME
@@ -91,12 +94,13 @@ spec:
               name: kotsadm-minio
         - name: S3_BUCKET_ENDPOINT
           value: "true"
+{{ end }}
         - name: HTTP_PROXY
         - name: HTTPS_PROXY
         - name: NO_PROXY
           value: kotsadm-postgres,kotsadm-minio,kotsadm-api-node
         - name: IS_HELM_MANAGED
-          value: "true"
+          value: {{ .Values.adminConsole.isHelmManaged | quote }}
         image: {{ .Values.adminConsole.images.kotsadm }}
         imagePullPolicy: IfNotPresent
         name: kotsadm
@@ -123,6 +127,7 @@ spec:
           name: backup
         - mountPath: /tmp
           name: tmp
+{{ if not .Values.adminConsole.isHelmManaged }}
       initContainers:
       - args:
         - plan
@@ -231,6 +236,7 @@ spec:
         volumeMounts:
         - mountPath: /backup
           name: backup
+{{ end }}
       restartPolicy: Always
       securityContext:
         fsGroup: 1001

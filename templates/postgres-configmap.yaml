@@ -1,3 +1,4 @@
+{{ if not .Values.adminConsole.isHelmManaged }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,4 +9,4 @@ data:
   passwd: |-
     root:x:0:0:root:/root:/bin/ash
     postgres:x:999:999:Linux User,,,:/var/lib/postgresql:/bin/sh
-
+{{ end }}
