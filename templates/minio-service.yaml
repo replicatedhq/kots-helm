@@ -1,3 +1,4 @@
+{{ if not .Values.adminConsole.isHelmManaged }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -14,3 +15,4 @@ spec:
   type: ClusterIP
 status:
   loadBalancer: {}
+{{ end }}
