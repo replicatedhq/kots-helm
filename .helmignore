@@ -1,3 +1,5 @@
 build-local.sh
 /*.yaml.tmpl
 /.image.env
+/.git
+/.github
