@@ -8,5 +8,5 @@ data:
   initial-app-images-pushed: "false"
   minio-enabled-snapshots: "false"
   registry-is-read-only: "false"
-  skip-preflights: {{ .Values.adminConsole.automation.skipPreflights | quote }}
+  skip-preflights: {{ .Values.automation.skipPreflights | quote }}
 

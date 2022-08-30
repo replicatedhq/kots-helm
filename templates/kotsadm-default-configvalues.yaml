@@ -1,4 +1,4 @@
-{{ if .Values.adminConsole.automation.config.values }}
+{{ if .Values.automation.config.values }}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -8,5 +8,5 @@ metadata:
   name: kotsadm-default-configvalues
 type: Opaque
 data:
-  configvalues: {{ .Values.adminConsole.automation.config.values | b64enc }}
+  configvalues: {{ .Values.automation.config.values | b64enc }}
 {{ end }}

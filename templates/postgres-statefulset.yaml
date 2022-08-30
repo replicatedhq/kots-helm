@@ -1,4 +1,4 @@
-{{ if not .Values.adminConsole.isHelmManaged }}
+{{ if not .Values.isHelmManaged }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -29,7 +29,7 @@ spec:
               name: kotsadm-postgres
         - name: POSTGRES_DB
           value: kotsadm
-        image: {{ .Values.adminConsole.images.postgres }}
+        image: {{ .Values.images.postgres }}
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:

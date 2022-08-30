@@ -1,4 +1,4 @@
-{{ if not .Values.adminConsole.isHelmManaged }}
+{{ if not .Values.isHelmManaged }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -39,7 +39,7 @@ spec:
           value: "on"
         - name: MINIO_UPDATE
           value: "off"
-        image: {{ .Values.adminConsole.images.minio }}
+        image: {{ .Values.images.minio }}
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3

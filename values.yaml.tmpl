@@ -2,22 +2,21 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-adminConsole:
-  images:
-    kotsadm: ${KOTSADM_REGISTRY}/kotsadm:${KOTS_TAG}
-    migrations: ${KOTSADM_REGISTRY}/kotsadm-migrations:${KOTS_TAG}
-    minio: minio/minio:${MINIO_TAG}
-    postgres: postgres:${POSTGRES_14_TAG}
-  password: ""
-  minimalRBAC: true
-  isHelmManaged: true
-  automation:
-    license:
-      slug: ""
-      data: ""
-    skipPreflights: false
-    config:
-      values: ""
+images:
+  kotsadm: ${KOTSADM_REGISTRY}/kotsadm:${KOTS_TAG}
+  migrations: ${KOTSADM_REGISTRY}/kotsadm-migrations:${KOTS_TAG}
+  minio: minio/minio:${MINIO_TAG}
+  postgres: postgres:${POSTGRES_14_TAG}
+password: ""
+minimalRBAC: true
+isHelmManaged: true
+automation:
+  license:
+    slug: ""
+    data: ""
+  skipPreflights: false
+  config:
+    values: ""
 
 imagePullSecrets: []
 nameOverride: ""

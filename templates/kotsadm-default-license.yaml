@@ -1,15 +1,15 @@
-{{ if .Values.adminConsole.automation.license.slug }}
+{{ if .Values.automation.license.slug }}
 apiVersion: v1
 kind: Secret
 metadata:
   annotations:
     kots.io/airgap: "false"
   labels:
-    kots.io/app: {{ .Values.adminConsole.automation.license.slug }}
+    kots.io/app: {{ .Values.automation.license.slug }}
     kots.io/automation: license
     {{- include "admin-console.labels" . | nindent 4 }}
   name: kotsadm-default-license
 type: Opaque
 data:
-  license: {{ .Values.adminConsole.automation.license.data | b64enc }}
+  license: {{ .Values.automation.license.data | b64enc }}
 {{ end }}
