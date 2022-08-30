@@ -1,4 +1,4 @@
-{{ if .Values.adminConsole.isHelmManaged }}
+{{ if .Values.isHelmManaged }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -16,7 +16,7 @@ spec:
       serviceAccount: kotsadm
       containers:
           - name: delete-configmaps
-            image: {{ .Values.adminConsole.images.kotsadm }}
+            image: {{ .Values.images.kotsadm }}
             env:
               - name: NAMESPACE
                 valueFrom:
@@ -27,7 +27,7 @@ spec:
               - "-ec"
               - "kubectl -n $NAMESPACE delete configmaps -l kots.io/kotsadm=true"
           - name: delete-secrets
-            image: {{ .Values.adminConsole.images.kotsadm }}
+            image: {{ .Values.images.kotsadm }}
             env:
               - name: NAMESPACE
                 valueFrom:
