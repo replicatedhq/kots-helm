@@ -1,0 +1,13 @@
+name: "admin-console"
+version: "0.1.0"
+usage: "helm admin-console preflight --config <localConfigSpec> --preflight <localOrRemotePreflightSpec>"
+description: "This serves as an entrypoint for running kots CLI commands created for the plugin such as 'preflight'"
+ignoreFlags: false
+command: "$HELM_PLUGIN_DIR/binaries/kots plugin"
+platformCommand:
+  - os: linux
+    arch: i386
+    command: "$HELM_PLUGIN_DIR/binaries/kots plugin"
+  - os: linux
+    arch: amd64
+    command: "$HELM_PLUGIN_DIR/binaries/kots plugin"
