@@ -51,16 +51,16 @@ spec:
               key: key
               name: kotsadm-session
 {{ if not .Values.isHelmManaged }}
-        - name: POSTGRES_PASSWORD
+        - name: RQLITE_PASSWORD
           valueFrom:
             secretKeyRef:
               key: password
-              name: kotsadm-postgres
-        - name: POSTGRES_URI
+              name: kotsadm-rqlite
+        - name: RQLITE_URI
           valueFrom:
             secretKeyRef:
               key: uri
-              name: kotsadm-postgres
+              name: kotsadm-rqlite
 {{ end }}
         - name: POD_NAMESPACE
           valueFrom:
@@ -98,7 +98,7 @@ spec:
         - name: HTTP_PROXY
         - name: HTTPS_PROXY
         - name: NO_PROXY
-          value: kotsadm-postgres,kotsadm-minio,kotsadm-api-node
+          value: kotsadm-rqlite,kotsadm-minio,kotsadm-api-node
         - name: IS_HELM_MANAGED
           value: {{ .Values.isHelmManaged | quote }}
         image: {{ .Values.images.kotsadm }}
@@ -133,7 +133,7 @@ spec:
         - plan
         env:
         - name: SCHEMAHERO_DRIVER
-          value: postgres
+          value: rqlite
         - name: SCHEMAHERO_SPEC_FILE
           value: /tables
         - name: SCHEMAHERO_OUT
@@ -142,7 +142,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: uri
-              name: kotsadm-postgres
+              name: kotsadm-rqlite
         image: {{ .Values.images.migrations }}
         imagePullPolicy: IfNotPresent
         name: schemahero-plan
@@ -160,14 +160,14 @@ spec:
         - apply
         env:
         - name: SCHEMAHERO_DRIVER
-          value: postgres
+          value: rqlite
         - name: SCHEMAHERO_DDL
           value: /migrations/plan.yaml
         - name: SCHEMAHERO_URI
           valueFrom:
             secretKeyRef:
               key: uri
-              name: kotsadm-postgres
+              name: kotsadm-rqlite
         image: {{ .Values.images.migrations }}
         imagePullPolicy: IfNotPresent
         name: schemahero-apply
@@ -184,11 +184,11 @@ spec:
       - command:
         - /restore-db.sh
         env:
-        - name: POSTGRES_PASSWORD
+        - name: RQLITE_PASSWORD
           valueFrom:
             secretKeyRef:
               key: password
-              name: kotsadm-postgres
+              name: kotsadm-rqlite
         image: {{ .Values.images.kotsadm }}
         imagePullPolicy: IfNotPresent
         name: restore-db
