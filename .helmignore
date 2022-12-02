@@ -1,4 +1,4 @@
-build-local.sh
+scripts/
 /*.yaml.tmpl
 /.image.env
 /.git
