@@ -47,9 +47,15 @@ If you want to specify ConfigValues, you can do so by setting the `automation.co
 
 ## Local dev
 
-Run build-local.sh script located in the root directory of this repository to create a chart.
+Run build-local.sh script located in the scripts directory of this repository to create a chart.
 The input parameter is the kots version to package
 
 ```
-./build-local.sh 1.75.0
+./scripts/build-local.sh 1.75.0
+```
+
+To build a chart that uses ttl images, run the build-ttl.sh script located in the scripts directory.
+The input parameter is the commit sha that matches that of the kots ttl images that were pushed.
+```
+./scripts/build-ttl.sh 3db5e3c
 ```
