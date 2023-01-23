@@ -9,6 +9,9 @@ spec:
   - name: http
     port: {{ .Values.service.port }}
     targetPort: 3000
+{{- if (and (eq .Values.service.type "NodePort") ( .Values.service.nodePort)) }}
+    nodePort: {{ .Values.service.nodePort }}
+{{- end}}
   selector:
     app: kotsadm
   type: {{ .Values.service.type }}
