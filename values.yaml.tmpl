@@ -33,6 +33,20 @@ serviceAccount:
 
 podAnnotations: {}
 
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/os
+            operator: In
+            values:
+              - linux
+          - key: kubernetes.io/arch
+            operator: NotIn
+            values:
+              - arm64
+
 podSecurityContext: {}
   # fsGroup: 2000
 
