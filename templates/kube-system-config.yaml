@@ -1,0 +1,12 @@
+# if the embedded cluster version is set, include this configmap
+{{- if .Values.embeddedClusterVersion }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: embedded-cluster-config
+  namespace: kube-system
+data:
+  admin-console-version: "{{- .Values.kotsVersion }}"
+  embedded-cluster-version: "{{- .Values.embeddedClusterVersion }}"
+  embedded-cluster-k0s-version: "{{- .Values.embeddedClusterK0sVersion }}"
+{{- end }}
