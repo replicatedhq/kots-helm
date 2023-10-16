@@ -1,0 +1,8 @@
+{{- if .Values.kotsApplication }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kotsadm-application-metadata
+data:
+  application.yaml: {{- .Values.kotsApplication }}
+{{- end }}
