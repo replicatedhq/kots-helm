@@ -4,5 +4,5 @@ kind: ConfigMap
 metadata:
   name: kotsadm-application-metadata
 data:
-  application.yaml: {{- .Values.kotsApplication }}
+  application.yaml: "{{- .Values.kotsApplication }}"
 {{- end }}
