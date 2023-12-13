@@ -22,8 +22,7 @@ spec:
       - command:
         - /bin/sh
         - -ce
-        - /usr/bin/docker-entrypoint.sh minio -C /home/minio/.minio/ --quiet server
-          /export
+        - minio -C /home/minio/.minio/ --quiet server /export
         env:
         - name: MINIO_ACCESS_KEY
           valueFrom:
