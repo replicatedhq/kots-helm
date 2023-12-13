@@ -3,7 +3,7 @@ kind: Service
 metadata:
   labels:
     {{- include "admin-console.labels" . | nindent 4 }}
-  name: {{ include "admin-console.fullname" . }}
+  name: kotsadm-nodeport
 spec:
   ports:
   - name: http
