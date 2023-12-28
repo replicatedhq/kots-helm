@@ -86,6 +86,10 @@ spec:
         - name: S3_BUCKET_ENDPOINT
           value: "true"
 {{ end }}
+{{ if .Values.embeddedClusterID }}
+        - name: EMBEDDED_CLUSTER_ID
+          value: {{ .Values.embeddedClusterID | quote }}
+{{ end }}
         - name: HTTP_PROXY
         - name: HTTPS_PROXY
         - name: NO_PROXY
