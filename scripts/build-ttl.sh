@@ -4,8 +4,8 @@ set -e
 
 GIT_COMMIT=$1
 export CHART_VERSION=0.0.0-${GIT_COMMIT}
-export KOTS_VERSION=12h
-export KOTS_TAG=12h
+export KOTS_VERSION=24h
+export KOTS_TAG=24h
 export KOTSADM_REGISTRY=ttl.sh/$USER
 
 curl -O -L https://raw.githubusercontent.com/replicatedhq/kots/${GIT_COMMIT}/.image.env
