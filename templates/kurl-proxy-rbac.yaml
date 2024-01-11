@@ -3,19 +3,21 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: kurl-proxy
-  namespace: default
+  namespace: {{ .Release.Namespace }}
   labels:
     kots.io/kotsadm: "true"
     kots.io/backup: velero
+    {{- include "admin-console.labels" . | nindent 4 }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  namespace: default
+  namespace: {{ .Release.Namespace }}
   name: secret-manager
   labels:
     kots.io/kotsadm: "true"
     kots.io/backup: velero
+    {{- include "admin-console.labels" . | nindent 4 }}
 rules:
 - apiGroups: [""]
   resources: ["secrets"]
@@ -25,10 +27,11 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: kurl-proxy-tls-secrets
-  namespace: default
+  namespace: {{ .Release.Namespace }}
   labels:
     kots.io/kotsadm: "true"
     kots.io/backup: velero
+    {{- include "admin-console.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -36,5 +39,5 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: kurl-proxy
-  namespace: default
+  namespace: {{ .Release.Namespace }}
 {{ end }}

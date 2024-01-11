@@ -7,6 +7,7 @@ metadata:
     app: kurl-proxy-kotsadm
     kots.io/kotsadm: "true"
     kots.io/backup: velero
+    {{- include "admin-console.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
@@ -17,7 +18,12 @@ spec:
         app: kurl-proxy-kotsadm
         kots.io/kotsadm: "true"
         kots.io/backup: velero
+        {{- include "admin-console.labels" . | nindent 8 }}
     spec:
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: proxy
         image: {{ .Values.images.kurlProxy }}
