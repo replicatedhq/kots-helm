@@ -5,8 +5,6 @@ metadata:
   name: kurl-proxy-kotsadm
   labels:
     app: kurl-proxy-kotsadm
-    kots.io/kotsadm: "true"
-    kots.io/backup: velero
     {{- include "admin-console.labels" . | nindent 4 }}
 spec:
   selector:
@@ -16,8 +14,6 @@ spec:
     metadata:
       labels:
         app: kurl-proxy-kotsadm
-        kots.io/kotsadm: "true"
-        kots.io/backup: velero
         {{- include "admin-console.labels" . | nindent 8 }}
     spec:
       {{- with .Values.affinity }}

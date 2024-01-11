@@ -4,8 +4,6 @@ kind: Service
 metadata:
   name: kurl-proxy-kotsadm
   labels:
-    kots.io/kotsadm: "true"
-    kots.io/backup: velero
     {{- include "admin-console.labels" . | nindent 4 }}
 spec:
   type: NodePort
