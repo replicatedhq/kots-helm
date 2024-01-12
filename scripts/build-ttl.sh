@@ -14,6 +14,7 @@ export $(cat .image.env | sed 's/#.*//g' | xargs)
 envsubst < Chart.yaml.tmpl > Chart.yaml
 envsubst < values.yaml.tmpl > values.yaml
 
+rm -f admin-console-*.tgz
 export CHART_NAME=`helm package . | rev | cut -d/ -f1 | rev`
 helm push $CHART_NAME oci://ttl.sh/$USER
 

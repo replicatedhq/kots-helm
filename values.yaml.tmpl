@@ -7,6 +7,7 @@ images:
   migrations: ${KOTSADM_REGISTRY}/kotsadm-migrations:${KOTS_TAG}
   minio: ${KOTSADM_REGISTRY}/minio:${MINIO_TAG}
   rqlite: ${KOTSADM_REGISTRY}/rqlite:${RQLITE_TAG}
+  kurlProxy: ${KOTSADM_REGISTRY}/kurl-proxy:${KOTS_TAG}
 password: ""
 minimalRBAC: true
 isHelmManaged: true
@@ -47,6 +48,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
+  enabled: true
   type: NodePort
   port: 80
 
@@ -102,3 +104,7 @@ affinity:
             operator: NotIn
             values:
               - arm64
+
+kurlProxy:
+  enabled: false
+  targetPort: 8800
