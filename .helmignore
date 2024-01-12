@@ -3,3 +3,4 @@ scripts/
 /.image.env
 /.git
 /.github
+/.tgz

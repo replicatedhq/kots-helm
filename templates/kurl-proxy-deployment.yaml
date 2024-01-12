@@ -26,7 +26,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: NODE_PORT
-          value: {{ .Values.kurlProxy.targetPort }}
+          value: "{{ .Values.kurlProxy.targetPort }}"
         - name: UPSTREAM_ORIGIN
           value: http://kotsadm:3000
         - name: TLS_SECRET_NAME
