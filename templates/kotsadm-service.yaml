@@ -1,4 +1,4 @@
-{{ if not .Values.kurlProxy.enabled }}
+{{ if .Values.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:

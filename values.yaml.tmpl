@@ -48,6 +48,7 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
+  enabled: true
   type: NodePort
   port: 80
 
@@ -106,4 +107,4 @@ affinity:
 
 kurlProxy:
   enabled: false
-  nodePort: 30080
+  targetPort: 8800
