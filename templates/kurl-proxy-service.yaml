@@ -10,7 +10,8 @@ spec:
   selector:
     app: kurl-proxy-kotsadm
   ports:
-  - port: {{ .Values.kurlProxy.targetPort }}
+  - name: http
+    port: {{ .Values.kurlProxy.targetPort }}
     targetPort: {{ .Values.kurlProxy.targetPort }}
 {{- if .Values.kurlProxy.nodePort }}
     nodePort: {{ .Values.kurlProxy.nodePort }}
