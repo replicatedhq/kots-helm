@@ -104,7 +104,7 @@ spec:
   volumeClaimTemplates:
   - metadata:
       labels:
-        {{- include "admin-console.labels" . | nindent 8 }}
+        {{- include "admin-console.immutableLabels" . | nindent 8 }}
       name: kotsadm-minio
     spec:
       accessModes:

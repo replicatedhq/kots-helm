@@ -16,7 +16,7 @@ spec:
   - metadata:
       name: kotsadm-rqlite
       labels:
-        {{- include "admin-console.labels" . | nindent 8 }}
+        {{- include "admin-console.immutableLabels" . | nindent 8 }}
     spec:
       accessModes:
       - "ReadWriteOnce"

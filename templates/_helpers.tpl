@@ -45,6 +45,14 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Labels for immutable resources
+*/}}
+{{- define "admin-console.immutableLabels" -}}
+kots.io/backup: velero
+kots.io/kotsadm: "true"
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "admin-console.selectorLabels" -}}
