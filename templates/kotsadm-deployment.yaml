@@ -90,6 +90,10 @@ spec:
         - name: EMBEDDED_CLUSTER_ID
           value: {{ .Values.embeddedClusterID | quote }}
 {{ end }}
+{{ if .Values.embeddedClusterVersion }}
+        - name: EMBEDDED_CLUSTER_VERSION
+          value: {{ .Values.embeddedClusterVersion | quote }}
+{{ end }}
         - name: HTTP_PROXY
         - name: HTTPS_PROXY
         - name: NO_PROXY
