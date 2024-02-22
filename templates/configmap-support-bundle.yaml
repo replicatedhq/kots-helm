@@ -1,10 +1,8 @@
-{{ if .Values.embeddedClusterID }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: kotsadm-embedded-cluster-support-bundle
   labels:
-    troubleshoot.io/kind: support-bundle
+    troubleshoot.sh/kind: support-bundle
 data:
   support-bundle-spec: {{ .Files.Get "troubleshoot/embedded-cluster-support-bundle.yaml" | quote }}
-{{ end }}

@@ -9,28 +9,24 @@ spec:
   collectors:
   - logs:
       name: podlogs/kotsadm
-      namespace: kotsadm
       selector:
       - app=kotsadm
       limits:
         maxAge: 720h
   - logs:
       name: podlogs/kotsadm-minio
-      namespace: kotsadm
       selector:
       - app=kotsadm-minio
       limits:
         maxAge: 720h
   - logs:
       name: podlogs/kotsadm-rqlite
-      namespace: kotsadm
       selector:
       - app=kotsadm-rqlite
       limits:
         maxAge: 720h
   - logs:
       name: podlogs/kurl-proxy-kotsadm
-      namespace: kotsadm
       selector:
       - app=kurl-proxy-kotsadm
       limits:
