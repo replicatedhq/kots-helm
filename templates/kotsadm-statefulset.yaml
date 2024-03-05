@@ -1,6 +1,6 @@
-{{ if .Values.withMinio }}
+{{ if not .Values.withMinio }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   labels:
     {{- include "admin-console.labels" . | nindent 4 }}
@@ -9,14 +9,13 @@ spec:
   selector:
     matchLabels:
       app: kotsadm
-  strategy: {}
+  serviceName: kotsadm
   template:
     metadata:
       annotations:
         backup.velero.io/backup-volumes: backup
         pre.hook.backup.velero.io/command: '["/backup.sh"]'
         pre.hook.backup.velero.io/timeout: 10m
-      creationTimestamp: null
       labels:
         app: kotsadm
         {{- include "admin-console.labels" . | nindent 8 }}
@@ -69,24 +68,6 @@ spec:
           value: http://kotsadm.{{ .Release.Namespace }}.svc.cluster.local:3000
         - name: API_ADVERTISE_ENDPOINT
           value: http://localhost:8800
-{{ if not .Values.isHelmManaged }}
-        - name: S3_ENDPOINT
-          value: http://kotsadm-minio:9000
-        - name: S3_BUCKET_NAME
-          value: kotsadm
-        - name: S3_ACCESS_KEY_ID
-          valueFrom:
-            secretKeyRef:
-              key: accesskey
-              name: kotsadm-minio
-        - name: S3_SECRET_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              key: secretkey
-              name: kotsadm-minio
-        - name: S3_BUCKET_ENDPOINT
-          value: "true"
-{{ end }}
 {{ if .Values.embeddedClusterID }}
         - name: EMBEDDED_CLUSTER_ID
           value: {{ .Values.embeddedClusterID | quote }}
@@ -98,7 +79,7 @@ spec:
         - name: HTTP_PROXY
         - name: HTTPS_PROXY
         - name: NO_PROXY
-          value: kotsadm-rqlite,kotsadm-minio,kotsadm-api-node
+          value: kotsadm-rqlite,kotsadm-api-node
         - name: IS_HELM_MANAGED
           value: {{ .Values.isHelmManaged | quote }}
         image: {{ .Values.images.kotsadm }}
@@ -123,6 +104,8 @@ spec:
             cpu: 100m
             memory: 100Mi
         volumeMounts:
+        - mountPath: /kotsadmdata
+          name: kotsadmdata
         - mountPath: /backup
           name: backup
         - mountPath: /tmp
@@ -182,7 +165,7 @@ spec:
         - mountPath: /migrations
           name: migrations
       - command:
-        - /restore-db.sh
+        - /restore.sh
         env:
         - name: RQLITE_PASSWORD
           valueFrom:
@@ -191,7 +174,7 @@ spec:
               name: kotsadm-rqlite
         image: {{ .Values.images.kotsadm }}
         imagePullPolicy: IfNotPresent
-        name: restore-db
+        name: restore-data
         resources:
           limits:
             cpu: "1"
@@ -200,12 +183,69 @@ spec:
             cpu: 100m
             memory: 100Mi
         volumeMounts:
+        - mountPath: /kotsadmdata
+          name: kotsadmdata
         - mountPath: /backup
           name: backup
         - mountPath: /tmp
           name: tmp
+{{ end }}
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1001
+        runAsUser: 1001
+      serviceAccountName: kotsadm
+      volumes:
+      - persistentVolumeClaim:
+          claimName: kotsadmdata
+        name: kotsadmdata
+      - emptyDir:
+          medium: Memory
+        name: migrations
+      - emptyDir: {}
+        name: backup
+      - emptyDir: {}
+        name: tmp
+{{ $kotsminio := lookup "apps/v1" "StatefulSet" .Release.Namespace "kotsadm-minio" }}
+{{ if not $kotsminio }}
+{{ $existingpvc := lookup "v1" "PersistentVolumeClaim" .Release.Namespace "kotsadmdata" }}
+{{ if not $existingpvc }}
+# if the migration occurred, the pvc will already exist
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kotsadmdata
+  labels:
+    {{- include "admin-console.immutableLabels" . | nindent 4 }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
+{{ end }}
+{{ else }}
+# if minio exists, we need to migrate the data to a pvc
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kotsadm-migrate-s3
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: "1"
+  labels:
+    {{- include "admin-console.labels" . | nindent 4 }}
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "admin-console.labels" . | nindent 8 }}
+    spec:
+      containers:
       - command:
-        - /restore-s3.sh
+        - /migrate-s3.sh
         env:
         - name: S3_ENDPOINT
           value: http://kotsadm-minio:9000
@@ -225,7 +265,7 @@ spec:
           value: "true"
         image: {{ .Values.images.kotsadm }}
         imagePullPolicy: IfNotPresent
-        name: restore-s3
+        name: migrate-s3
         resources:
           limits:
             cpu: "1"
@@ -234,21 +274,29 @@ spec:
             cpu: 100m
             memory: 100Mi
         volumeMounts:
-        - mountPath: /backup
-          name: backup
-{{ end }}
-      restartPolicy: Always
-      securityContext:
-        fsGroup: 1001
-        runAsUser: 1001
-      serviceAccountName: kotsadm
+        - mountPath: /kotsadmdata
+          name: kotsadmdata
+      restartPolicy: OnFailure
       volumes:
-      - emptyDir:
-          medium: Memory
-        name: migrations
-      - emptyDir: {}
-        name: backup
-      - emptyDir: {}
-        name: tmp
-status: {}
+      - persistentVolumeClaim:
+          claimName: kotsadmdata
+        name: kotsadmdata
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kotsadmdata
+  annotations:
+    helm.sh/hook: pre-upgrade
+    helm.sh/hook-weight: "0"
+  labels:
+    {{- include "admin-console.immutableLabels" . | nindent 4 }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
 {{ end }}
+{{ end }}
+

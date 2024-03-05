@@ -1,4 +1,4 @@
-{{ if not .Values.isHelmManaged }}
+{{ if and (not .Values.isHelmManaged) (.Values.withMinio) }}
 apiVersion: v1
 kind: Service
 metadata:

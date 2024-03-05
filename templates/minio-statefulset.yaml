@@ -1,4 +1,4 @@
-{{ if not .Values.isHelmManaged }}
+{{ if and (not .Values.isHelmManaged) (.Values.withMinio) }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
