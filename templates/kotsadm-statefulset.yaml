@@ -243,6 +243,20 @@ spec:
       labels:
         {{- include "admin-console.labels" . | nindent 8 }}
     spec:
+      initContainers:
+      - command:
+        - /bin/sh
+        - -c
+        - |
+          kubectl scale deploy/kotsadm -n {{ .Release.Namespace }} --replicas=0
+          kubectl wait --for delete pod --selector=app=kotsadm -n {{ .Release.Namespace }} --timeout=300s
+        image: {{ .Values.images.kotsadm }}
+        imagePullPolicy: IfNotPresent
+        name: scale-down-kotsadm
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
       containers:
       - command:
         - /migrate-s3.sh
@@ -277,6 +291,7 @@ spec:
         - mountPath: /kotsadmdata
           name: kotsadmdata
       restartPolicy: OnFailure
+      serviceAccountName: kotsadm
       volumes:
       - persistentVolumeClaim:
           claimName: kotsadmdata
