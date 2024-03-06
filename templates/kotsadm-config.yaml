@@ -9,6 +9,7 @@ data:
   minio-enabled-snapshots: "false"
   registry-is-read-only: "false"
   skip-preflights: {{ .Values.automation.skipPreflights | quote }}
+  with-minio: "false"
   {{- if  .Values.automation.appVersionLabel }}
   app-version-label: {{ .Values.automation.appVersionLabel | quote }}
   {{- end }}
