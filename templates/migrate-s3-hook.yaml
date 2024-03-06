@@ -1,6 +1,6 @@
 
 {{ $kotsminio := lookup "apps/v1" "StatefulSet" .Release.Namespace "kotsadm-minio" }}
-{{ if and (not .Values.withMinio) ($kotsminio) }}
+{{ if $kotsminio }}
 # if minio exists, we need to migrate the data to a PVC
 apiVersion: batch/v1
 kind: Job
