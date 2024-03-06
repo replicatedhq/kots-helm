@@ -68,13 +68,13 @@ spec:
       serviceAccountName: kotsadm
       volumes:
       - persistentVolumeClaim:
-          claimName: kotsadmdata
+          claimName: kotsadmdata-kotsadm-0
         name: kotsadmdata
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: kotsadmdata
+  name: kotsadmdata-kotsadm-0
   annotations:
     helm.sh/hook: pre-upgrade
     helm.sh/hook-weight: "0"

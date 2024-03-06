@@ -203,22 +203,13 @@ spec:
         name: backup
       - emptyDir: {}
         name: tmp
-{{ $kotsminio := lookup "apps/v1" "StatefulSet" .Release.Namespace "kotsadm-minio" }}
-{{ $existingpvc := lookup "v1" "PersistentVolumeClaim" .Release.Namespace "kotsadmdata" }}
-{{ if and (not $kotsminio) (not $existingpvc) }}
-# if the migration occurred, the pvc will already exist
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: kotsadmdata
-  labels:
-    {{- include "admin-console.immutableLabels" . | nindent 4 }}
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 4Gi
-{{ end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: kotsadmdata
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 4Gi
 
