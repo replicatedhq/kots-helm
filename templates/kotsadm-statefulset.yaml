@@ -205,103 +205,14 @@ spec:
       - emptyDir: {}
         name: tmp
 {{ $kotsminio := lookup "apps/v1" "StatefulSet" .Release.Namespace "kotsadm-minio" }}
-{{ if not $kotsminio }}
 {{ $existingpvc := lookup "v1" "PersistentVolumeClaim" .Release.Namespace "kotsadmdata" }}
-{{ if not $existingpvc }}
+{{ if and (not $kotsminio) (not $existingpvc) }}
 # if the migration occurred, the pvc will already exist
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: kotsadmdata
-  labels:
-    {{- include "admin-console.immutableLabels" . | nindent 4 }}
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 4Gi
-{{ end }}
-{{ else }}
-# if minio exists, we need to migrate the data to a pvc
----
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: kotsadm-migrate-s3
-  annotations:
-    helm.sh/hook: pre-upgrade
-    helm.sh/hook-weight: "1"
-  labels:
-    {{- include "admin-console.labels" . | nindent 4 }}
-spec:
-  template:
-    metadata:
-      labels:
-        {{- include "admin-console.labels" . | nindent 8 }}
-    spec:
-      initContainers:
-      - command:
-        - /bin/sh
-        - -c
-        - |
-          kubectl scale deploy/kotsadm -n {{ .Release.Namespace }} --replicas=0
-          kubectl wait --for delete pod --selector=app=kotsadm -n {{ .Release.Namespace }} --timeout=300s
-        image: {{ .Values.images.kotsadm }}
-        imagePullPolicy: IfNotPresent
-        name: scale-down-kotsadm
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-      containers:
-      - command:
-        - /migrate-s3.sh
-        env:
-        - name: S3_ENDPOINT
-          value: http://kotsadm-minio:9000
-        - name: S3_BUCKET_NAME
-          value: kotsadm
-        - name: S3_ACCESS_KEY_ID
-          valueFrom:
-            secretKeyRef:
-              key: accesskey
-              name: kotsadm-minio
-        - name: S3_SECRET_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              key: secretkey
-              name: kotsadm-minio
-        - name: S3_BUCKET_ENDPOINT
-          value: "true"
-        image: {{ .Values.images.kotsadm }}
-        imagePullPolicy: IfNotPresent
-        name: migrate-s3
-        resources:
-          limits:
-            cpu: "1"
-            memory: 2Gi
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        volumeMounts:
-        - mountPath: /kotsadmdata
-          name: kotsadmdata
-      restartPolicy: OnFailure
-      serviceAccountName: kotsadm
-      volumes:
-      - persistentVolumeClaim:
-          claimName: kotsadmdata
-        name: kotsadmdata
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: kotsadmdata
-  annotations:
-    helm.sh/hook: pre-upgrade
-    helm.sh/hook-weight: "0"
   labels:
     {{- include "admin-console.immutableLabels" . | nindent 4 }}
 spec:
