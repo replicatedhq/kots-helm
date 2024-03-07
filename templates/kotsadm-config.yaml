@@ -5,7 +5,8 @@ metadata:
     {{- include "admin-console.labels" . | nindent 4 }}
   name: kotsadm-confg
 data:
-  initial-app-images-pushed: "false"
+  initial-app-images-pushed: "{{ .Values.initialAppImagesPushed | quote }}"
+  force-original-image-names: "{{ .Values.forceOriginalImageNames | quote }}"
   minio-enabled-snapshots: "false"
   registry-is-read-only: "false"
   skip-preflights: {{ .Values.automation.skipPreflights | quote }}
