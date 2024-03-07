@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   annotations:
-    kots.io/airgap: "false"
+    kots.io/airgap: "{{ .Values.automation.airgap | quote }}"
   labels:
     kots.io/app: {{ .Values.automation.license.slug }}
     kots.io/automation: license
