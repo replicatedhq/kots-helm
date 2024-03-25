@@ -1,9 +1,0 @@
-{{- if .Values.kotsApplication }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: kotsadm-application-metadata
-data:
-  application.yaml: |
-{{ indent 4 .Values.kotsApplication }}
-{{- end }}
