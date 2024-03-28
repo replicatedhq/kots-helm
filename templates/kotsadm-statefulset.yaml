@@ -79,6 +79,8 @@ spec:
           value: kotsadm-rqlite,kotsadm-api-node
         - name: IS_HELM_MANAGED
           value: {{ .Values.isHelmManaged | quote }}
+        - name: DISABLE_OUTBOUND_CONNECTIONS
+          value: {{ .Values.isAirgap | quote }}
         image: {{ .Values.images.kotsadm }}
         imagePullPolicy: IfNotPresent
         name: kotsadm
