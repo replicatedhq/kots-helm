@@ -42,6 +42,10 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 kots.io/backup: velero
 kots.io/kotsadm: "true"
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- if (gt (len .Values.labels) 0) -}}
+{{ printf "\n"}}
+{{ .Values.labels | toYaml }}
+{{- end -}}
 {{- end }}
 
 {{/*
