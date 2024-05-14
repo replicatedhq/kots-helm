@@ -32,6 +32,10 @@ spec:
 {{- with .Values.passwordSecretRef }}
               key: {{ .key }}
               name: {{ .name }}
+        - name: SHARED_PASSWORD_SECRET_NAME
+          value: {{ .name }}
+        - name: SHARED_PASSWORD_SECRET_KEY
+          value: {{ .key }}
 {{- end }}
 {{- else }}
               key: passwordBcrypt
