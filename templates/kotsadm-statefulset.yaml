@@ -28,8 +28,19 @@ spec:
         - name: SHARED_PASSWORD_BCRYPT
           valueFrom:
             secretKeyRef:
+{{- if .Values.passwordSecretRef }}
+{{- with .Values.passwordSecretRef }}
+              key: {{ .key }}
+              name: {{ .name }}
+        - name: SHARED_PASSWORD_SECRET_NAME
+          value: {{ .name }}
+        - name: SHARED_PASSWORD_SECRET_KEY
+          value: {{ .key }}
+{{- end }}
+{{- else }}
               key: passwordBcrypt
               name: kotsadm-password
+{{- end }} 
         - name: AUTO_CREATE_CLUSTER_TOKEN
           valueFrom:
             secretKeyRef:
@@ -40,7 +51,7 @@ spec:
             secretKeyRef:
               key: key
               name: kotsadm-session
-{{ if not .Values.isHelmManaged }}
+{{- if not .Values.isHelmManaged }}
         - name: RQLITE_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -51,7 +62,7 @@ spec:
             secretKeyRef:
               key: uri
               name: kotsadm-rqlite
-{{ end }}
+{{- end }}
         - name: POD_NAMESPACE
           valueFrom:
             fieldRef:
@@ -65,14 +76,14 @@ spec:
           value: http://kotsadm.{{ .Release.Namespace }}.svc.cluster.local:3000
         - name: API_ADVERTISE_ENDPOINT
           value: http://localhost:8800
-{{ if .Values.embeddedClusterID }}
+{{- if .Values.embeddedClusterID }}
         - name: EMBEDDED_CLUSTER_ID
           value: {{ .Values.embeddedClusterID | quote }}
-{{ end }}
-{{ if .Values.embeddedClusterVersion }}
+{{- end }}
+{{- if .Values.embeddedClusterVersion }}
         - name: EMBEDDED_CLUSTER_VERSION
           value: {{ .Values.embeddedClusterVersion | quote }}
-{{ end }}
+{{- end }}
         - name: HTTP_PROXY
         - name: HTTPS_PROXY
         - name: NO_PROXY

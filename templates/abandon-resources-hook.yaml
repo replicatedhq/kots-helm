@@ -25,6 +25,11 @@ spec:
           if kubectl get configmap kotsadm-application-metadata -n {{ .Release.Namespace }} -o jsonpath='{.metadata.labels.app\.kubernetes\.io/managed-by}' | grep -q "Helm"; then
             kubectl annotate configmap kotsadm-application-metadata -n {{ .Release.Namespace }} helm.sh/resource-policy=keep
           fi
+          {{- if .Values.passwordSecretRef }}
+          if kubectl get secret kotsadm-password -n {{ .Release.Namespace }} -o jsonpath='{.metadata.labels.app\.kubernetes\.io/managed-by}' | grep -q "Helm"; then
+            kubectl annotate secret kotsadm-password -n {{ .Release.Namespace }} helm.sh/resource-policy=keep
+          fi
+          {{- end }}
         image: {{ .Values.images.kotsadm }}
         imagePullPolicy: IfNotPresent
         name: abandon-resources
