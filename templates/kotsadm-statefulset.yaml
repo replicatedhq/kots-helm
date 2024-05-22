@@ -25,6 +25,9 @@ spec:
       {{- end }}
       containers:
       - env:
+        {{- with .Values.extraEnv }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         - name: SHARED_PASSWORD_BCRYPT
           valueFrom:
             secretKeyRef:
@@ -84,10 +87,6 @@ spec:
         - name: EMBEDDED_CLUSTER_VERSION
           value: {{ .Values.embeddedClusterVersion | quote }}
 {{- end }}
-        - name: HTTP_PROXY
-        - name: HTTPS_PROXY
-        - name: NO_PROXY
-          value: kotsadm-rqlite,kotsadm-api-node
         - name: IS_HELM_MANAGED
           value: {{ .Values.isHelmManaged | quote }}
         - name: DISABLE_OUTBOUND_CONNECTIONS
