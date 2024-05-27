@@ -1,4 +1,8 @@
-{{ if not .Values.isHelmManaged }}
+{{- $pvcSize := "5Gi" }}
+{{- $rqliteSts := lookup "apps/v1" "StatefulSet" .Release.Namespace "kotsadm-rqlite" }}
+{{- if $rqliteSts }}
+{{- $pvcSize = (index $rqliteSts.spec.volumeClaimTemplates 0).spec.resources.requests.storage }}
+{{- end }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -6,7 +10,7 @@ metadata:
   labels:
     {{- include "admin-console.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.isHA | ternary 3 1 }}
   serviceName: kotsadm-rqlite-headless
   podManagementPolicy: "Parallel"
   selector:
@@ -22,7 +26,7 @@ spec:
       - "ReadWriteOnce"
       resources:
         requests:
-          storage: 1Gi
+          storage: {{ $pvcSize }}
   template:
     metadata:
       labels:
@@ -49,15 +53,24 @@ spec:
                   values:
                   - kotsadm-rqlite
             topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-role.kubernetes.io/control-plane
+                operator: Exists
       containers:
       - image: {{ .Values.images.rqlite }}
         name: rqlite
         args:
         - -disco-mode=dns
         - -disco-config={"name":"kotsadm-rqlite-headless"}
-        - -bootstrap-expect=1
+        - -bootstrap-expect={{ .Values.isHA | ternary 3 1 }}
         - -auth=/auth/config.json
         - -join-as=kotsadm
+        env:
+        - name: GOGC
+          value: "10"
         ports:
         - name: rqlite
           containerPort: 4001
@@ -72,24 +85,24 @@ spec:
         livenessProbe:
           httpGet:
             scheme: HTTP
-            path: /readyz
+            path: /readyz?noleader
             port: rqlite
-          initialDelaySeconds: 30
+          initialDelaySeconds: 10
           timeoutSeconds: 5
-          failureThreshold: 3
+          periodSeconds: 30
+          failureThreshold: 10
         readinessProbe:
           httpGet:
             scheme: HTTP
             path: /readyz
             port: rqlite
-          initialDelaySeconds: 1
-          timeoutSeconds: 1
-          periodSeconds: 1
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 5
         resources:
           limits:
-            cpu: 200m
-            memory: 1Gi
+            cpu: "1"
+            memory: 2Gi
           requests:
             cpu: 100m
-            memory: 100Mi
-{{ end }}
+            memory: 256Mi

@@ -1,4 +1,4 @@
-{{ if .Values.kurlProxy.enabled }}
+{{- if .Values.kurlProxy.enabled }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -34,4 +34,4 @@ subjects:
 - kind: ServiceAccount
   name: kurl-proxy
   namespace: {{ .Release.Namespace }}
-{{ end }}
+{{- end }}
