@@ -2,7 +2,7 @@
 
 set -e
 
-export CURRENT_USER=`id -u -n`
+export CURRENT_USER=${GITHUB_USER:-$(id -u -n)}
 export KOTS_VERSION=$1
 export KOTS_TAG=v${KOTS_VERSION}
 export KOTSADM_REGISTRY=kotsadm # docker.io is implicit

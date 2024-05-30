@@ -1,4 +1,3 @@
-{{ if .Values.isHelmManaged }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -37,4 +36,3 @@ spec:
               - "/bin/sh"
               - "-ec"
               - "kubectl -n $NAMESPACE delete secrets -l kots.io/kotsadm=true"
-{{ end }}

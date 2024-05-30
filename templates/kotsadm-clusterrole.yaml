@@ -1,4 +1,4 @@
-{{ if not .Values.minimalRBAC }}
+{{- if not .Values.minimalRBAC }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -12,4 +12,4 @@ rules:
   - '*'
   verbs:
   - '*'
-{{ end }}
+{{- end }}

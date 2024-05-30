@@ -1,4 +1,4 @@
-{{ if .Values.service.enabled }}
+{{- if .Values.service.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -18,4 +18,4 @@ spec:
   type: {{ .Values.service.type }}
 status:
   loadBalancer: {}
-{{ end }}
+{{- end }}
