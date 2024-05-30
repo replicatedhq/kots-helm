@@ -87,10 +87,6 @@ spec:
         - name: EMBEDDED_CLUSTER_VERSION
           value: {{ .Values.embeddedClusterVersion | quote }}
 {{- end }}
-        - name: HTTP_PROXY
-        - name: HTTPS_PROXY
-        - name: NO_PROXY
-          value: kotsadm-rqlite,kotsadm-api-node
         - name: DISABLE_OUTBOUND_CONNECTIONS
           value: {{ .Values.isAirgap | quote }}
         image: {{ .Values.images.kotsadm }}
