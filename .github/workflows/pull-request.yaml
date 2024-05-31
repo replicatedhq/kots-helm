@@ -18,9 +18,9 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        KOTS_TAG=$(gh release view --repo replicatedhq/kots --json tagName -q .tagName)
-        ./scripts/build-local.sh "$KOTS_TAG"
-        echo "chart-path=admin-console-${KOTS_TAG#v}.tgz" >> "$GITHUB_OUTPUT"
+        export KOTS_TAG=$(gh release view --repo replicatedhq/kots --json tagName -q .tagName)
+        make build
+        echo "chart-path=${{ github.workspace }}/admin-console-${{ env.KOTS_TAG#v }}.tgz" >> "$GITHUB_OUTPUT"
 
   e2e:
     runs-on: ubuntu-latest
