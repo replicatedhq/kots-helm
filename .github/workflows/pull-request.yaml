@@ -29,7 +29,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
     - uses: ./.github/actions/e2e
-      secrets: inherit
       with:
         test-name: ${{ matrix.test }}
         replicated-api-token: ${{ secrets.C11Y_MATRIX_TOKEN }}
