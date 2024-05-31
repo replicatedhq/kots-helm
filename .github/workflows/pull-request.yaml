@@ -1,0 +1,38 @@
+name: Pull request
+on:
+- pull_request
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: ttl.sh
+      env:
+        GITHUB_USER: automated-${{ github.run_id }}
+      run: make build-ttl.sh
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    strategy:
+      fail-fast: false
+      matrix:
+        test:
+          - { name: s3-to-rqlite, licenseb64: ${{ secrets.S3_TO_RQLITE_LICENSE }} }
+          # - { name: pvc-to-rqlite, licenseb64: ${{ secrets.PVC_TO_RQLITE_LICENSE }} }
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Run test
+      working-directory: e2e
+      env:
+        CHART_URL: oci://ttl.sh/automated-${{ github.run_id }}/admin-console
+        CHART_VERSION: 0.0.0-main
+        LICENSE_BASE64: ${{ matrix.test.licenseb64 }}
+      run: ${{ matrix.test.name }}.sh
