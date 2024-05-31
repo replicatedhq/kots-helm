@@ -21,7 +21,7 @@ spec:
         - -c
         - |
           # Delete old abandon-resources job if it exists
-          kubectl delete job kotsadm-abandon-resources -n {{ .Release.Namespace }} || true
+          kubectl delete job kotsadm-abandon-resources -n {{ .Release.Namespace }} --ignore-not-found
 
           # Annotate resources to keep them
           if kubectl get configmap kotsadm-confg -n {{ .Release.Namespace }} -o jsonpath='{.metadata.labels.app\.kubernetes\.io/managed-by}' | grep -q "Helm"; then
