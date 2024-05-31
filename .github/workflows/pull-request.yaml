@@ -32,3 +32,18 @@ jobs:
       with:
         test-name: ${{ matrix.test }}
         replicated-api-token: ${{ secrets.C11Y_MATRIX_TOKEN }}
+
+  # this job will validate that all the tests passed
+  # it is used for the github branch protection rule
+  validate-success:
+    runs-on: ubuntu-20.04
+    needs:
+      - e2e
+    if: always()
+    steps:
+      # https://docs.github.com/en/actions/learn-github-actions/contexts#needs-context
+      - name: fail if e2e job was not successful
+        if: needs.e2e.result != 'success'
+        run: exit 1
+      - name: succeed if everything else passed
+        run: echo "Validation succeeded"

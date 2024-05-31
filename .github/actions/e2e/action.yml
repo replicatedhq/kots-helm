@@ -17,13 +17,13 @@ runs:
         api-token: ${{ inputs.replicated-api-token }}
         kubernetes-distribution: kind
         kubernetes-version: v1.28.0
-        cluster-name: automated-kots-helm-${{ github.run_id }}-${{ input.test-name }}
+        cluster-name: automated-kots-helm-${{ github.run_id }}-${{ inputs.test-name }}
         timeout-minutes: '120'
         ttl: 2h
         export-kubeconfig: true
 
     - name: Run test
-      working-directory: e2e/${{ input.test-name }}
+      working-directory: e2e/${{ inputs.test-name }}
       env:
         CHART_URL: oci://ttl.sh/automated-${{ github.run_id }}/admin-console
         CHART_VERSION: 0.0.0-main
@@ -34,7 +34,7 @@ runs:
       if: failure()
       uses: ./.github/actions/generate-support-bundle
       with:
-        artifact-name: ${{ input.test-name }}-${{ github.run_id }}-support-bundle
+        artifact-name: ${{ inputs.test-name }}-${{ github.run_id }}-support-bundle
 
     - name: Remove Cluster
       id: remove-cluster
