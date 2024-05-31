@@ -17,14 +17,13 @@ curl -LO "https://github.com/replicatedhq/kots/releases/latest/download/kots_lin
   && mv kots /usr/local/bin/kubectl-kots
 
 # install the app
-echo "$LICENSE_BASE64" | base64 -d > license.yaml
 kubectl kots install s3-to-rqlite \
   --namespace s3-to-rqlite \
   --shared-password=password \
   --license-file=license.yaml
 
 # wait for the app to be ready
-./shared/wait-for-app.sh s3-to-rqlite
+../shared/wait-for-app.sh s3-to-rqlite
 
 # upgrade the chart
 helm upgrade -i s3-to-rqlite "$CHART_URL" \
