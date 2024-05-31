@@ -1,0 +1,33 @@
+name: 'Generate Support Bundle'
+description: 'Composite action for generating a support bundle'
+inputs:
+  artifact-name:
+    description: 'Name of the artifact to be uploaded'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - id: generate-support-bundle
+      run: |
+        RELEASE="$(
+          curl -sfL https://api.github.com/repos/replicatedhq/troubleshoot/releases/latest | \
+          grep '"tag_name":' | \
+          sed -E 's/.*"(v[^"]+)".*/\1/'
+        )"
+        curl -fsLO "https://github.com/replicatedhq/troubleshoot/releases/download/${RELEASE}/support-bundle_linux_amd64.tar.gz"
+        tar xzf support-bundle_linux_amd64.tar.gz
+        ./support-bundle https://kots.io
+        BUNDLE="$(ls -1 | grep 'support-bundle-.*.tar.gz')"
+        echo "bundle-name=$BUNDLE" >> "$GITHUB_OUTPUT"
+      shell: bash
+
+    - id: upload-support-bundle
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ steps.generate-support-bundle.outputs.bundle-name }}
+
+    - name: Print support bundle URL
+      shell: bash
+      run: |
+        echo "::notice ::support bundle can be downloaded from: ${{ steps.upload-support-bundle.outputs.artifact-url }}"
