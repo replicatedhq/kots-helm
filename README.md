@@ -19,7 +19,7 @@ Run build-local.sh script located in the scripts directory of this repository to
 The input parameter is the kots version to package
 
 ```
-./scripts/build-local.sh 1.75.0
+./scripts/build-local.sh v1.75.0
 ```
 
 To build a chart that uses ttl images, run the build-ttl.sh script located in the scripts directory.

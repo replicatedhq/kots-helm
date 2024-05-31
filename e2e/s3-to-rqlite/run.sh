@@ -20,14 +20,14 @@ curl -LO "https://github.com/replicatedhq/kots/releases/latest/download/kots_lin
 kubectl kots install s3-to-rqlite \
   --namespace s3-to-rqlite \
   --shared-password=password \
-  --license-file=license.yaml
+  --license-file=license.yaml \
+  --no-port-forward
 
 # wait for the app to be ready
 ../shared/wait-for-app.sh s3-to-rqlite
 
 # upgrade the chart
-helm upgrade -i s3-to-rqlite "$CHART_URL" \
-  --version "$CHART_VERSION" \
+helm upgrade -i s3-to-rqlite "$CHART_PATH" \
   --namespace s3-to-rqlite \
   --wait
 

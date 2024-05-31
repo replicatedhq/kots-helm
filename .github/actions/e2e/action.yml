@@ -4,6 +4,9 @@ inputs:
   test-name:
     description: 'Individual test to run'
     required: true
+  chart-path:
+    description: 'Path to the chart to test'
+    required: true
   replicated-api-token:
     description: 'Replicated API token for C11y matrix'
     required: false
@@ -25,8 +28,7 @@ runs:
     - name: Run test
       working-directory: e2e/${{ inputs.test-name }}
       env:
-        CHART_URL: oci://ttl.sh/automated-${{ github.run_id }}/admin-console
-        CHART_VERSION: 0.0.0-main
+        CHART_PATH: ${{ inputs.chart-path }}
       run: ./run.sh
       shell: bash
 
