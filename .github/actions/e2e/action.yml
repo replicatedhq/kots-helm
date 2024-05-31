@@ -4,6 +4,9 @@ inputs:
   test-name:
     description: 'Individual test to run'
     required: true
+  replicated-api-token:
+    description: 'Replicated API token for C11y matrix'
+    required: false
 runs:
   using: "composite"
   steps:
@@ -11,7 +14,7 @@ runs:
       id: create-cluster 
       uses: replicatedhq/replicated-actions/create-cluster@v1 
       with:
-        api-token: ${{ secrets.C11Y_MATRIX_TOKEN }}
+        api-token: ${{ inputs.replicated-api-token }}
         kubernetes-distribution: kind
         kubernetes-version: v1.28.0
         cluster-name: automated-kots-helm-${{ github.run_id }}-${{ input.test-name }}
@@ -39,5 +42,5 @@ runs:
       if: ${{ always() && steps.create-cluster.outputs.cluster-id != '' }}
       continue-on-error: true
       with:
-        api-token: ${{ secrets.C11Y_MATRIX_TOKEN }}
+        api-token: ${{ inputs.replicated-api-token }}
         cluster-id: ${{ steps.create-cluster.outputs.cluster-id }}

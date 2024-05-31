@@ -32,3 +32,4 @@ jobs:
       secrets: inherit
       with:
         test-name: ${{ matrix.test }}
+        replicated-api-token: ${{ secrets.C11Y_MATRIX_TOKEN }}
