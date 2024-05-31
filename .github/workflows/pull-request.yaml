@@ -33,4 +33,4 @@ jobs:
       env:
         CHART_URL: oci://ttl.sh/automated-${{ github.run_id }}/admin-console
         CHART_VERSION: 0.0.0-main
-      run: run.sh
+      run: ./run.sh
