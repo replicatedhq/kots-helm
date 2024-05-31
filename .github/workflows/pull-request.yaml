@@ -8,19 +8,21 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    outputs:
-      chart-path: ${{ steps.build.outputs.chart-path }}
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: build local
-      id: build
+    - name: Build local
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
         export KOTS_TAG=$(gh release view --repo replicatedhq/kots --json tagName -q .tagName)
         make build
-        echo "chart-path=${{ github.workspace }}/admin-console-${KOTS_TAG#v}.tgz" >> "$GITHUB_OUTPUT"
+        mv admin-console-${KOTS_TAG#v}.tgz admin-console-chart.tgz
+    - name: Upload chart
+      uses: actions/upload-artifact@v4
+      with:
+        name: admin-console-chart
+        path: admin-console-chart.tgz
 
   e2e:
     runs-on: ubuntu-latest
@@ -34,10 +36,14 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Download chart
+      uses: actions/download-artifact@v4
+      with:
+        name: admin-console-chart
     - uses: ./.github/actions/e2e
       with:
         test-name: ${{ matrix.test }}
-        chart-path: ${{ needs.build.outputs.chart-path }}
+        chart-path: ${{ github.workspace }}/admin-console-chart.tgz
         replicated-api-token: ${{ secrets.C11Y_MATRIX_TOKEN }}
 
   # this job will validate that all the tests passed
