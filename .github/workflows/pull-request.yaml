@@ -23,9 +23,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        test:
-          - { name: s3-to-rqlite, licenseb64: ${{ secrets.S3_TO_RQLITE_LICENSE }} }
+        test: [
+          { name: s3-to-rqlite, licenseb64: ${{ secrets.S3_TO_RQLITE_LICENSE }} }
           # - { name: pvc-to-rqlite, licenseb64: ${{ secrets.PVC_TO_RQLITE_LICENSE }} }
+        ]
     steps:
     - name: Checkout
       uses: actions/checkout@v4
