@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: kotsadm-abandon-resources
+  name: kotsadm-keep-resources
   annotations:
     helm.sh/hook: pre-upgrade
     helm.sh/hook-weight: "2"
@@ -20,6 +20,10 @@ spec:
         - /bin/sh
         - -c
         - |
+          # Delete old abandon-resources job if it exists
+          kubectl delete job kotsadm-abandon-resources -n {{ .Release.Namespace }} || true
+
+          # Annotate resources to keep them
           if kubectl get configmap kotsadm-confg -n {{ .Release.Namespace }} -o jsonpath='{.metadata.labels.app\.kubernetes\.io/managed-by}' | grep -q "Helm"; then
             kubectl annotate configmap kotsadm-confg -n {{ .Release.Namespace }} helm.sh/resource-policy=keep
           fi
@@ -33,7 +37,7 @@ spec:
           {{- end }}
         image: {{ .Values.images.kotsadm }}
         imagePullPolicy: IfNotPresent
-        name: abandon-resources
+        name: keep-resources
         resources:
           requests:
             cpu: 100m
