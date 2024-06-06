@@ -89,8 +89,6 @@ spec:
 {{- end }}
         - name: DISABLE_OUTBOUND_CONNECTIONS
           value: {{ .Values.isAirgap | quote }}
-        - name: IS_HA
-          value: {{ .Values.isHA | quote }}
         image: {{ .Values.images.kotsadm }}
         imagePullPolicy: IfNotPresent
         name: kotsadm
