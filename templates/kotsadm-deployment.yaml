@@ -101,8 +101,8 @@ spec:
             path: /healthz
             port: 3000
             scheme: HTTP
-          initialDelaySeconds: 10
-          periodSeconds: 10
+          initialDelaySeconds: 2
+          periodSeconds: 2
         resources:
           limits:
             cpu: "1"
