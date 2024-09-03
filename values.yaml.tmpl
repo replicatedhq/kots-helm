@@ -102,8 +102,9 @@ affinity:
             values:
               - linux
           - key: kubernetes.io/arch
-            operator: NotIn
+            operator: In
             values:
+              - amd64
               - arm64
 
 kurlProxy:
