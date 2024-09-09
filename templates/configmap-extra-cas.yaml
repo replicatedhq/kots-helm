@@ -1,0 +1,10 @@
+{{- if and .Release.IsInstall (not (empty .Values.extraCAs)) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kotsadm-extra-ca
+data:
+{{- range $key, $value := .Values.extraCAs }}
+  {{ $key }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
