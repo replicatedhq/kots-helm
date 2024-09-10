@@ -89,6 +89,8 @@ spec:
 {{- end }}
         - name: DISABLE_OUTBOUND_CONNECTIONS
           value: {{ .Values.isAirgap | quote }}
+        - name: SSL_CERT_DIR
+          value: /certs
         image: {{ .Values.images.kotsadm }}
         imagePullPolicy: IfNotPresent
         name: kotsadm
@@ -115,6 +117,8 @@ spec:
           name: backup
         - mountPath: /tmp
           name: tmp
+        - mountPath: /certs
+          name: kotsadm-extra-ca
       initContainers:
       - args:
         - plan
@@ -204,3 +208,6 @@ spec:
         name: backup
       - emptyDir: {}
         name: tmp
+      - configmap:
+          name: kotsadm-extra-ca
+        name: kotsadm-extra-ca
