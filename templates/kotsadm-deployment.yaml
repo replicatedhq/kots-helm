@@ -89,8 +89,10 @@ spec:
 {{- end }}
         - name: DISABLE_OUTBOUND_CONNECTIONS
           value: {{ .Values.isAirgap | quote }}
+{{- if .Values.privateCAs.enabled }}
         - name: SSL_CERT_DIR
           value: /certs
+{{- end }}
         image: {{ .Values.images.kotsadm }}
         imagePullPolicy: IfNotPresent
         name: kotsadm
@@ -117,8 +119,10 @@ spec:
           name: backup
         - mountPath: /tmp
           name: tmp
+{{- if .Values.privateCAs.enabled }}
         - mountPath: /certs
           name: kotsadm-private-cas
+{{- end }}
       initContainers:
       - args:
         - plan
@@ -208,6 +212,9 @@ spec:
         name: backup
       - emptyDir: {}
         name: tmp
+{{- if .Values.privateCAs.enabled }}
       - configmap:
-          name: kotsadm-private-cas
+          name: {{- .Values.privateCAs.configmapName }}
+          optional: true
         name: kotsadm-private-cas
+{{- end }}
