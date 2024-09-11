@@ -215,5 +215,6 @@ spec:
 {{- if .Values.privateCAs.enabled }}
       - configmap:
           name: {{- .Values.privateCAs.configmapName }}
+          optional: true
         name: kotsadm-private-cas
 {{- end }}
