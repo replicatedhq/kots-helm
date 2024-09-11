@@ -92,6 +92,8 @@ spec:
 {{- if .Values.privateCAs.enabled }}
         - name: SSL_CERT_DIR
           value: /certs
+        - name: SSL_CERT_CONFIGMAP
+          value: "{{ .Values.privateCAs.configmapName }}"
 {{- end }}
         image: {{ .Values.images.kotsadm }}
         imagePullPolicy: IfNotPresent
@@ -214,7 +216,7 @@ spec:
         name: tmp
 {{- if .Values.privateCAs.enabled }}
       - configmap:
-          name: {{- .Values.privateCAs.configmapName }}
+          name: "{{ .Values.privateCAs.configmapName }}"
           optional: true
         name: kotsadm-private-cas
 {{- end }}
