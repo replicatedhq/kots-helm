@@ -118,7 +118,7 @@ spec:
         - mountPath: /tmp
           name: tmp
         - mountPath: /certs
-          name: kotsadm-extra-ca
+          name: kotsadm-private-cas
       initContainers:
       - args:
         - plan
@@ -209,5 +209,5 @@ spec:
       - emptyDir: {}
         name: tmp
       - configmap:
-          name: kotsadm-extra-ca
-        name: kotsadm-extra-ca
+          name: kotsadm-private-cas
+        name: kotsadm-private-cas
