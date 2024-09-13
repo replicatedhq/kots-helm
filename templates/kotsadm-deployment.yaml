@@ -215,7 +215,7 @@ spec:
       - emptyDir: {}
         name: tmp
 {{- if .Values.privateCAs.enabled }}
-      - configmap:
+      - configMap:
           name: "{{ .Values.privateCAs.configmapName }}"
           optional: true
         name: kotsadm-private-cas
