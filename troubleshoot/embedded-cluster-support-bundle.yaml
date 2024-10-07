@@ -4,6 +4,7 @@ metadata:
   name: embedded-cluster-kotsadm-support-bundle
   labels:
     troubleshoot.io/kind: support-bundle
+  runHostCollectorsInPod: true  # default is false 
 spec:
   uri: https://raw.githubusercontent.com/replicatedhq/kots-helm/main/troubleshoot/embedded-cluster-support-bundle.yaml
   collectors:
