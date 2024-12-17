@@ -3,6 +3,8 @@ kind: SupportBundle
 metadata:
   name: embedded-cluster-kotsadm-support-bundle
   labels:
+    kots.io/backup: velero
+    kots.io/kotsadm: "true"
     troubleshoot.io/kind: support-bundle
 spec:
   uri: https://raw.githubusercontent.com/replicatedhq/kots-helm/main/troubleshoot/embedded-cluster-support-bundle.yaml
