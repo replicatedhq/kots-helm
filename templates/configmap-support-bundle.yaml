@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: kotsadm-support-bundle
   labels:
+    {{- include "admin-console.labels" . | nindent 4 }}
     troubleshoot.sh/kind: support-bundle
 data:
   support-bundle-spec: {{ .Files.Get "troubleshoot/embedded-cluster-support-bundle.yaml" | quote }}
