@@ -183,7 +183,7 @@ spec:
         - mountPath: /migrations
           name: migrations
       - command:
-        - /scrips/restore-db.sh
+        - /scripts/restore-db.sh
         env:
         - name: RQLITE_PASSWORD
           valueFrom:
