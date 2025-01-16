@@ -13,7 +13,7 @@ spec:
     metadata:
       annotations:
         backup.velero.io/backup-volumes: backup
-        pre.hook.backup.velero.io/command: '["/backup.sh"]'
+        pre.hook.backup.velero.io/command: '["/scripts/backup.sh"]'
         pre.hook.backup.velero.io/timeout: 10m
       labels:
         app: kotsadm
@@ -183,7 +183,7 @@ spec:
         - mountPath: /migrations
           name: migrations
       - command:
-        - /restore-db.sh
+        - /scrips/restore-db.sh
         env:
         - name: RQLITE_PASSWORD
           valueFrom:
