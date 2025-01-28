@@ -87,10 +87,6 @@ spec:
         - name: EMBEDDED_CLUSTER_VERSION
           value: {{ .Values.embeddedClusterVersion | quote }}
 {{- end }}
-{{- if .Values.isEC2Install }}
-        - name: IS_EC2_INSTALL
-          value: {{ .Values.isEC2Install | quote }}
-{{- end }}
         - name: DISABLE_OUTBOUND_CONNECTIONS
           value: {{ .Values.isAirgap | quote }}
 {{- if .Values.privateCAs.enabled }}
