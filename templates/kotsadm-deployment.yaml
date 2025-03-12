@@ -25,6 +25,12 @@ spec:
       {{- end }}
       containers:
       - env:
+        - name: REPLICATED_APP_ENDPOINT
+          value: {{ .Values.replicatedAppEndpoint | quote }}
+        - name: REPLICATED_REGISTRY_DOMAIN
+          value: {{ .Values.replicatedRegistryDomain | quote }}
+        - name: PROXY_REGISTRY_DOMAIN
+          value: {{ .Values.proxyRegistryDomain | quote }}
         {{- with .Values.extraEnv }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
