@@ -7,7 +7,8 @@ metadata:
     kots.io/kotsadm: "true"
     troubleshoot.io/kind: support-bundle
 spec:
-  uri: https://raw.githubusercontent.com/replicatedhq/kots-helm/main/troubleshoot/embedded-cluster-support-bundle.yaml
+  # NOTE: This is commented out until we have a decision on how to handle this with custom domains.
+  # uri: https://raw.githubusercontent.com/replicatedhq/kots-helm/main/troubleshoot/embedded-cluster-support-bundle.yaml
   collectors:
   - logs:
       name: podlogs/kotsadm
