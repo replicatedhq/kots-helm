@@ -111,6 +111,8 @@ affinity:
             values:
               - amd64
               - arm64
+          - key: node-role.kubernetes.io/control-plane
+            operator: Exists
 
 kurlProxy:
   enabled: false
