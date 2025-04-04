@@ -92,7 +92,7 @@ spec:
         readinessProbe:
           httpGet:
             scheme: HTTP
-            path: /readyz
+            path: /readyz?sync&timeout=4s
             port: rqlite
           initialDelaySeconds: 10
           timeoutSeconds: 5
