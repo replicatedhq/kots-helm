@@ -39,7 +39,7 @@ spec:
         - name: EMBEDDED_CLUSTER_ID
           value: {{ .Values.embeddedClusterID | quote }}
 {{- end }}
-{{- if .Values.kurlProxy.isMultiNodeDisabled }}
+{{- if .Values.isMultiNodeDisabled }}
         - name: IS_MULTI_NODE_DISABLED
           value: "true"
 {{- end }}

@@ -19,6 +19,7 @@ embeddedClusterID: ""
 embeddedClusterVersion: ""
 isAirgap: false
 isHA: false
+isMultiNodeDisabled: false
 
 imagePullSecrets: []
 nameOverride: ""
@@ -117,7 +118,6 @@ affinity:
 kurlProxy:
   enabled: false
   targetPort: 8800
-  isMultiNodeDisabled: false
 
 privateCAs:
   enabled: false
