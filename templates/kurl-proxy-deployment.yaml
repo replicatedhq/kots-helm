@@ -35,13 +35,11 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: IS_MULTI_NODE_ENABLED
+          value: {{ .Values.isMultiNodeEnabled | quote }}
 {{- if .Values.embeddedClusterID }}
         - name: EMBEDDED_CLUSTER_ID
           value: {{ .Values.embeddedClusterID | quote }}
-{{- end }}
-{{- if .Values.isMultiNodeDisabled }}
-        - name: IS_MULTI_NODE_DISABLED
-          value: "true"
 {{- end }}
         volumeMounts:
         - name: kotsadm-config
