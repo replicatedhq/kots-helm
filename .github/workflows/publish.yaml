@@ -66,6 +66,7 @@ jobs:
 
     - name: Package the Helm chart
       run: |
+        export CHART_VERSION="${{ steps.tag.outputs.tag }}"
         export KOTS_TAG="${{ steps.version.outputs.kots_tag }}"
         export KOTSADM_REGISTRY="kotsadm" # docker.io is implicit
         export $(cat .image.env | sed 's/#.*//g' | xargs)
