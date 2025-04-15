@@ -1,0 +1,107 @@
+name: publish-production
+on:
+  push:
+    tags:
+    - 'v[0-9]+.[0-9]+.[0-9]+'
+    - 'v[0-9]+.[0-9]+.[0-9]+\-build\.[0-9]+'
+    - 'v[0-9]+.[0-9]+.[0-9]+\-ec\.[0-9]+\+[0-9a-f]+'
+
+jobs:
+  package-and-publish:
+    runs-on: 'ubuntu-24.04'
+    steps:
+    - name: Get tag
+      id: tag
+      uses: dawidd6/action-get-tag@v1
+      with:
+        strip_v: true
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: v3.8.1
+
+    - name: Determine version type and set variables
+      id: version
+      run: |
+        CHART_VERSION="${{ steps.tag.outputs.tag }}"
+        
+        if [[ "$CHART_VERSION" == *"-ec."*"+"* ]]; then
+          # EC tag with commit SHA
+          echo "kots_version=${CHART_VERSION%+*}" >> $GITHUB_OUTPUT
+          echo "kots_tag=v${CHART_VERSION%+*}" >> $GITHUB_OUTPUT
+          echo "kots_commit=${CHART_VERSION##*+}" >> $GITHUB_OUTPUT
+          echo "is_ec_tag=true" >> $GITHUB_OUTPUT
+        else
+          # Standard release tag
+          echo "kots_version=${CHART_VERSION%-*}" >> $GITHUB_OUTPUT
+          echo "kots_tag=v${CHART_VERSION%-*}" >> $GITHUB_OUTPUT
+          echo "is_ec_tag=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Verify latest KOTS release
+      if: steps.version.outputs.is_ec_tag == 'false'
+      run: |
+        LATEST_KOTS_TAG=$(curl -s https://api.github.com/repos/replicatedhq/kots/releases/latest | jq -r .tag_name)
+        if [[ "${{ steps.version.outputs.kots_tag }}" != "$LATEST_KOTS_TAG" ]]; then
+          echo "Error: Latest KOTS tag is ${LATEST_KOTS_TAG}, but this tag is ${{ steps.version.outputs.kots_tag }}"
+          exit 1
+        fi
+
+    - name: Fetch .image.env
+      run: |
+        if [[ "${{ steps.version.outputs.is_ec_tag }}" == "true" ]]; then
+          curl -O -L "https://raw.githubusercontent.com/replicatedhq/kots/${{ steps.version.outputs.kots_commit }}/.image.env"
+        else
+          curl -O -L "https://raw.githubusercontent.com/replicatedhq/kots/${{ steps.version.outputs.kots_tag }}/.image.env"
+        fi
+
+    - name: Set up environment variables
+      run: |
+        export KOTS_TAG="${{ steps.version.outputs.kots_tag }}"
+        export KOTSADM_REGISTRY="kotsadm" # docker.io is implicit
+        export $(cat .image.env | sed 's/#.*//g' | xargs)
+        
+        # Generate Helm chart files from templates
+        envsubst < Chart.yaml.tmpl > Chart.yaml
+        envsubst < values.yaml.tmpl > values.yaml
+        rm -f *.tmpl
+
+    - name: Package Helm chart
+      run: |
+        # Package the chart
+        CHART_NAME=$(helm package . | rev | cut -d/ -f1 | rev)
+        echo "CHART_NAME=${CHART_NAME}" >> $GITHUB_ENV
+
+    - name: Publish to staging registry
+      env:
+        HELM_USER: ${{secrets.KOTS_HELM_USER_STAGING}}
+        HELM_PASS: ${{secrets.KOTS_HELM_PASS_STAGING}}
+      run: |
+        echo "Publishing ${CHART_NAME} to staging registry"
+        
+        # Login to registry
+        helm registry login registry.staging.replicated.com \
+          --username "$HELM_USER" \
+          --password "$HELM_PASS"
+        
+        # Push the chart
+        helm push "$CHART_NAME" oci://registry.staging.replicated.com/library
+
+    - name: Publish to production registry
+      env:
+        HELM_USER: ${{secrets.KOTS_HELM_USER_PROD}}
+        HELM_PASS: ${{secrets.KOTS_HELM_PASS_PROD}}
+      run: |
+        echo "Publishing ${CHART_NAME} to production registry"
+        
+        # Login to registry
+        helm registry login registry.replicated.com \
+          --username "$HELM_USER" \
+          --password "$HELM_PASS"
+        
+        # Push the chart
+        helm push "$CHART_NAME" oci://registry.replicated.com/library
