@@ -49,7 +49,6 @@ jobs:
     - name: Verify latest KOTS release
       if: steps.version.outputs.is_ec_tag == 'false'
       run: |
-        echo "Verifying latest KOTS release"
         LATEST_KOTS_TAG=$(curl -s https://api.github.com/repos/replicatedhq/kots/releases/latest | jq -r .tag_name)
         if [[ "${{ steps.version.outputs.kots_tag }}" != "$LATEST_KOTS_TAG" ]]; then
           echo "Error: Latest KOTS tag is ${LATEST_KOTS_TAG}, but this tag is ${{ steps.version.outputs.kots_tag }}"
