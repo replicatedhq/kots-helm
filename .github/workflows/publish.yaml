@@ -69,6 +69,7 @@ jobs:
       run: |
         export CHART_VERSION="${{ steps.version.outputs.chart_version }}"
         export KOTS_TAG="${{ steps.version.outputs.kots_tag }}"
+        export KOTS_VERSION="${{ steps.version.outputs.kots_version }}"
         export KOTSADM_REGISTRY="kotsadm" # docker.io is implicit
         export $(cat .image.env | sed 's/#.*//g' | xargs)
         
