@@ -31,12 +31,14 @@ jobs:
         
         if [[ "$CHART_VERSION" == *"-ec."*"+"* ]]; then
           # EC tag with commit SHA
+          echo "EC tag detected"
           echo "kots_version=${CHART_VERSION%+*}" >> $GITHUB_OUTPUT
           echo "kots_tag=v${CHART_VERSION%+*}" >> $GITHUB_OUTPUT
           echo "kots_commit=${CHART_VERSION##*+}" >> $GITHUB_OUTPUT
           echo "is_ec_tag=true" >> $GITHUB_OUTPUT
         else
           # Standard release tag
+          echo "Standard release tag detected"
           echo "kots_version=${CHART_VERSION%-*}" >> $GITHUB_OUTPUT
           echo "kots_tag=v${CHART_VERSION%-*}" >> $GITHUB_OUTPUT
           echo "is_ec_tag=false" >> $GITHUB_OUTPUT
@@ -45,6 +47,7 @@ jobs:
     - name: Verify latest KOTS release
       if: steps.version.outputs.is_ec_tag == 'false'
       run: |
+        echo "Verifying latest KOTS release"
         LATEST_KOTS_TAG=$(curl -s https://api.github.com/repos/replicatedhq/kots/releases/latest | jq -r .tag_name)
         if [[ "${{ steps.version.outputs.kots_tag }}" != "$LATEST_KOTS_TAG" ]]; then
           echo "Error: Latest KOTS tag is ${LATEST_KOTS_TAG}, but this tag is ${{ steps.version.outputs.kots_tag }}"
@@ -54,8 +57,10 @@ jobs:
     - name: Fetch .image.env
       run: |
         if [[ "${{ steps.version.outputs.is_ec_tag }}" == "true" ]]; then
+          echo "Fetching .image.env for EC tag"
           curl -O -L "https://raw.githubusercontent.com/replicatedhq/kots/${{ steps.version.outputs.kots_commit }}/.image.env"
         else
+          echo "Fetching .image.env for standard release tag"
           curl -O -L "https://raw.githubusercontent.com/replicatedhq/kots/${{ steps.version.outputs.kots_tag }}/.image.env"
         fi
 
