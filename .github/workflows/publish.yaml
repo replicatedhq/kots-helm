@@ -26,21 +26,23 @@ jobs:
 
     - name: Determine version type and set variables
       id: version
+      env: 
+        CHART_TAG: ${{steps.tag.outputs.tag}}
       run: |
-        CHART_VERSION="${{ steps.tag.outputs.tag }}"
-        
-        if [[ "$CHART_VERSION" == *"-ec."*"+"* ]]; then
+        if [[ "${CHART_TAG}" == *"-ec."*"+"* ]]; then
           # EC tag with commit SHA
           echo "EC tag detected"
-          echo "kots_version=${CHART_VERSION%+*}" >> $GITHUB_OUTPUT
-          echo "kots_tag=v${CHART_VERSION%+*}" >> $GITHUB_OUTPUT
-          echo "kots_commit=${CHART_VERSION##*+}" >> $GITHUB_OUTPUT
+          echo "chart_version=${CHART_TAG%+*}" >> $GITHUB_OUTPUT
+          echo "kots_version=${CHART_TAG%+*}" >> $GITHUB_OUTPUT
+          echo "kots_tag=v${CHART_TAG%+*}" >> $GITHUB_OUTPUT
+          echo "kots_commit=${CHART_TAG##*+}" >> $GITHUB_OUTPUT
           echo "is_ec_tag=true" >> $GITHUB_OUTPUT
         else
           # Standard release tag
           echo "Standard release tag detected"
-          echo "kots_version=${CHART_VERSION%-*}" >> $GITHUB_OUTPUT
-          echo "kots_tag=v${CHART_VERSION%-*}" >> $GITHUB_OUTPUT
+          echo "chart_version=${CHART_TAG}" >> $GITHUB_OUTPUT
+          echo "kots_version=${CHART_TAG%-*}" >> $GITHUB_OUTPUT
+          echo "kots_tag=v${CHART_TAG%-*}" >> $GITHUB_OUTPUT
           echo "is_ec_tag=false" >> $GITHUB_OUTPUT
         fi
 
@@ -66,7 +68,7 @@ jobs:
 
     - name: Package the Helm chart
       run: |
-        export CHART_VERSION="${{ steps.tag.outputs.tag }}"
+        export CHART_VERSION="${{ steps.version.outputs.chart_version }}"
         export KOTS_TAG="${{ steps.version.outputs.kots_tag }}"
         export KOTSADM_REGISTRY="kotsadm" # docker.io is implicit
         export $(cat .image.env | sed 's/#.*//g' | xargs)
