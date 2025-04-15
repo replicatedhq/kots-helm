@@ -1,0 +1,84 @@
+name: publish-ec
+on:
+  push:
+    tags:
+    - 'v[0-9]+.[0-9]+.[0-9]+\-ec\.[0-9]+\+[0-9a-f]+'
+
+jobs:
+  package-and-publish-ec:
+    runs-on: 'ubuntu-24.04'
+    steps:
+    - name: Get tag
+      id: tag
+      uses: dawidd6/action-get-tag@v1
+      with:
+        strip_v: true
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install Helm
+      uses: azure/setup-helm@v1
+      with:
+        version: v3.8.1
+
+    - name: Determine version and set variables
+      id: version
+      env: 
+        CHART_TAG: ${{steps.tag.outputs.tag}}
+      run: |
+        echo "chart_version=${CHART_TAG%+*}" >> $GITHUB_OUTPUT
+        echo "kots_version=${CHART_TAG%+*}" >> $GITHUB_OUTPUT
+        echo "kots_tag=v${CHART_TAG%+*}" >> $GITHUB_OUTPUT
+        echo "kots_commit=${CHART_TAG##*+}" >> $GITHUB_OUTPUT
+
+    - name: Fetch .image.env from commit
+      run: |
+        curl -O -L "https://raw.githubusercontent.com/replicatedhq/kots/${{ steps.version.outputs.kots_commit }}/.image.env"
+
+    - name: Package the Helm chart
+      run: |
+        export CHART_VERSION="${{ steps.version.outputs.chart_version }}"
+        export KOTS_TAG="${{ steps.version.outputs.kots_tag }}"
+        export KOTS_VERSION="${{ steps.version.outputs.kots_version }}"
+        export KOTSADM_REGISTRY="kotsadm" # docker.io is implicit
+        export $(cat .image.env | sed 's/#.*//g' | xargs)
+        
+        # Generate Helm chart files from templates
+        envsubst < Chart.yaml.tmpl > Chart.yaml
+        envsubst < values.yaml.tmpl > values.yaml
+        rm -f *.tmpl
+
+        # Package the chart
+        CHART_NAME=$(helm package . | rev | cut -d/ -f1 | rev)
+        echo "CHART_NAME=${CHART_NAME}" >> $GITHUB_ENV
+
+    - name: Publish to staging registry
+      env:
+        HELM_USER: ${{secrets.KOTS_HELM_USER_STAGING}}
+        HELM_PASS: ${{secrets.KOTS_HELM_PASS_STAGING}}
+      run: |
+        echo "Publishing ${CHART_NAME} to staging registry"
+        
+        # Login to registry
+        helm registry login registry.staging.replicated.com \
+          --username "$HELM_USER" \
+          --password "$HELM_PASS"
+        
+        # Push the chart
+        helm push "$CHART_NAME" oci://registry.staging.replicated.com/library
+
+    - name: Publish to production registry
+      env:
+        HELM_USER: ${{secrets.KOTS_HELM_USER_PROD}}
+        HELM_PASS: ${{secrets.KOTS_HELM_PASS_PROD}}
+      run: |
+        echo "Publishing ${CHART_NAME} to production registry"
+        
+        # Login to registry
+        helm registry login registry.replicated.com \
+          --username "$HELM_USER" \
+          --password "$HELM_PASS"
+        
+        # Push the chart
+        helm push "$CHART_NAME" oci://registry.replicated.com/library
