@@ -64,7 +64,7 @@ jobs:
           curl -O -L "https://raw.githubusercontent.com/replicatedhq/kots/${{ steps.version.outputs.kots_tag }}/.image.env"
         fi
 
-    - name: Set up environment variables
+    - name: Package the Helm chart
       run: |
         export KOTS_TAG="${{ steps.version.outputs.kots_tag }}"
         export KOTSADM_REGISTRY="kotsadm" # docker.io is implicit
@@ -75,8 +75,6 @@ jobs:
         envsubst < values.yaml.tmpl > values.yaml
         rm -f *.tmpl
 
-    - name: Package Helm chart
-      run: |
         # Package the chart
         CHART_NAME=$(helm package . | rev | cut -d/ -f1 | rev)
         echo "CHART_NAME=${CHART_NAME}" >> $GITHUB_ENV
