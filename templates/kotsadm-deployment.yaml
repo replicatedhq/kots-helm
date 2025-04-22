@@ -129,6 +129,10 @@ spec:
           name: backup
         - mountPath: /tmp
           name: tmp
+{{- if .Values.embeddedClusterDataDir }}
+        - mountPath: {{ .Values.embeddedClusterDataDir }}
+          name: embedded-cluster-data-dir
+{{- end }}
 {{- if .Values.privateCAs.enabled }}
         - mountPath: /certs
           name: kotsadm-private-cas
@@ -222,6 +226,12 @@ spec:
         name: backup
       - emptyDir: {}
         name: tmp
+{{- if .Values.embeddedClusterDataDir }}
+      - name: embedded-cluster-data-dir
+        hostPath:
+          path: {{ .Values.embeddedClusterDataDir }}
+          type: Directory
+{{- end }}
 {{- if .Values.privateCAs.enabled }}
       - configMap:
           name: "{{ .Values.privateCAs.configmapName }}"
