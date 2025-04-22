@@ -132,6 +132,7 @@ spec:
 {{- if .Values.embeddedClusterDataDir }}
         - mountPath: {{ .Values.embeddedClusterDataDir }}
           name: embedded-cluster-data-dir
+          readOnly: true
 {{- end }}
 {{- if .Values.privateCAs.enabled }}
         - mountPath: /certs
