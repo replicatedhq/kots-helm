@@ -95,6 +95,14 @@ spec:
         - name: EMBEDDED_CLUSTER_VERSION
           value: {{ .Values.embeddedClusterVersion | quote }}
 {{- end }}
+{{- if .Values.embeddedClusterDataDir }}
+        - name: EMBEDDED_CLUSTER_DATA_DIR
+          value: {{ .Values.embeddedClusterDataDir | quote }}
+{{- end }}
+{{- if .Values.embeddedClusterK0sDir }}
+        - name: EMBEDDED_CLUSTER_K0S_DIR
+          value: {{ .Values.embeddedClusterK0sDir | quote }}
+{{- end }}
         - name: DISABLE_OUTBOUND_CONNECTIONS
           value: {{ .Values.isAirgap | quote }}
 {{- if .Values.privateCAs.enabled }}
@@ -132,6 +140,11 @@ spec:
 {{- if .Values.embeddedClusterDataDir }}
         - mountPath: {{ .Values.embeddedClusterDataDir }}
           name: embedded-cluster-data-dir
+          readOnly: true
+{{- end }}
+{{- if .Values.embeddedClusterK0sDir }}
+        - mountPath: {{ .Values.embeddedClusterK0sDir }}
+          name: embedded-cluster-k0s-dir
           readOnly: true
 {{- end }}
 {{- if .Values.privateCAs.enabled }}
@@ -231,6 +244,12 @@ spec:
       - name: embedded-cluster-data-dir
         hostPath:
           path: {{ .Values.embeddedClusterDataDir }}
+          type: Directory
+{{- end }}
+{{- if .Values.embeddedClusterK0sDir }}
+      - name: embedded-cluster-k0s-dir
+        hostPath:
+          path: {{ .Values.embeddedClusterK0sDir }}
           type: Directory
 {{- end }}
 {{- if .Values.privateCAs.enabled }}
