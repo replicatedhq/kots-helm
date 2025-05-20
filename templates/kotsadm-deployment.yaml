@@ -105,6 +105,12 @@ spec:
 {{- end }}
         - name: DISABLE_OUTBOUND_CONNECTIONS
           value: {{ .Values.isAirgap | quote }}
+{{- if .Values.privateCAs.enabled }}
+        - name: SSL_CERT_DIR
+          value: /certs
+        - name: SSL_CERT_CONFIGMAP
+          value: "{{ .Values.privateCAs.configmapName }}"
+{{- end }}
         image: {{ .Values.images.kotsadm }}
         imagePullPolicy: IfNotPresent
         name: kotsadm
@@ -140,6 +146,10 @@ spec:
         - mountPath: {{ .Values.embeddedClusterK0sDir }}
           name: embedded-cluster-k0s-dir
           readOnly: true
+{{- end }}
+{{- if .Values.privateCAs.enabled }}
+        - mountPath: /certs
+          name: kotsadm-private-cas
 {{- end }}
 {{- if .Values.extraVolumeMounts }}
         {{- toYaml .Values.extraVolumeMounts | nindent 8 }}
@@ -244,6 +254,12 @@ spec:
         hostPath:
           path: {{ .Values.embeddedClusterK0sDir }}
           type: Directory
+{{- end }}
+{{- if .Values.privateCAs.enabled }}
+      - configMap:
+          name: "{{ .Values.privateCAs.configmapName }}"
+          optional: true
+        name: kotsadm-private-cas
 {{- end }}
 {{- if .Values.extraVolumes }}
       {{- toYaml .Values.extraVolumes | nindent 6 }}
