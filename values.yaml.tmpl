@@ -77,6 +77,18 @@ extraEnv: []
 #  - name: HTTP_PROXY
 #    value: http://proxy.example.com
 
+# Additional volumes to add to the kotsadm deployment
+extraVolumes: []
+# - name: host-ca-bundle
+#   hostPath:
+#     path: /etc/ssl/certs/ca-certificates.crt
+#     type: FileOrCreate
+
+# Additional volumeMounts to add to the kotsadm container
+extraVolumeMounts: []
+# - name: host-ca-bundle
+#   mountPath: /certs/ca-certificates.crt
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

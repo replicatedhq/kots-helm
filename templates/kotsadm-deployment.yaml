@@ -151,6 +151,9 @@ spec:
         - mountPath: /certs
           name: kotsadm-private-cas
 {{- end }}
+{{- if .Values.extraVolumeMounts }}
+        {{- toYaml .Values.extraVolumeMounts | nindent 8 }}
+{{- end }}
       initContainers:
       - args:
         - plan
@@ -257,4 +260,7 @@ spec:
           name: "{{ .Values.privateCAs.configmapName }}"
           optional: true
         name: kotsadm-private-cas
+{{- end }}
+{{- if .Values.extraVolumes }}
+      {{- toYaml .Values.extraVolumes | nindent 6 }}
 {{- end }}
