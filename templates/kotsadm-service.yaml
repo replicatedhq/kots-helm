@@ -15,7 +15,6 @@ spec:
 {{- end}}
   selector:
     app: kotsadm
-    {{- include "admin-console.labels" . | nindent 4 }}
   type: {{ .Values.service.type }}
 status:
   loadBalancer: {}
