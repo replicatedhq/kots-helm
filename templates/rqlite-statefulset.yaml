@@ -20,7 +20,6 @@ spec:
   - metadata:
       name: kotsadm-rqlite
       labels:
-        app: kotsadm-rqlite
         {{- include "admin-console.immutableLabels" . | nindent 8 }}
     spec:
       accessModes:
