@@ -26,6 +26,7 @@ spec:
   publishNotReadyAddresses: True
   selector:
     app: kotsadm-rqlite
+    {{- include "admin-console.labels" . | nindent 4 }}
   ports:
     - protocol: TCP
       port: 4001

@@ -19,6 +19,7 @@ spec:
         pre.hook.backup.velero.io/timeout: 10m
       labels:
         app: kotsadm
+        {{- include "admin-console.labels" . | nindent 8 }}
     spec:
       {{- with .Values.affinity }}
       affinity:

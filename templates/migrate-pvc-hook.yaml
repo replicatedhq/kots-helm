@@ -13,6 +13,9 @@ metadata:
     {{- include "admin-console.labels" . | nindent 4 }}
 spec:
   template:
+    metadata:
+      labels:
+        {{- include "admin-console.labels" . | nindent 8 }}
     spec:
       initContainers:
       - command:

@@ -14,6 +14,7 @@ spec:
     metadata:
       labels:
         app: kurl-proxy-kotsadm
+        {{- include "admin-console.labels" . | nindent 8 }}
     spec:
       {{- with .Values.affinity }}
       affinity:

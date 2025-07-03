@@ -31,6 +31,7 @@ spec:
     metadata:
       labels:
         app: kotsadm-rqlite
+        {{- include "admin-console.labels" . | nindent 8 }}
     spec:
       securityContext:
         runAsUser: 1001
