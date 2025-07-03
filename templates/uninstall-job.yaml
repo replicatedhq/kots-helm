@@ -5,11 +5,16 @@ metadata:
   annotations:
     "helm.sh/hook": pre-delete
     "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    {{- include "admin-console.labels" . | nindent 4 }}
 spec:
   backoffLimit: 1
   completions: 1
   parallelism: 1
   template:
+    metadata:
+      labels:
+        {{- include "admin-console.labels" . | nindent 8 }}
     spec:
       {{- with .Values.affinity }}
       affinity:
@@ -18,25 +23,25 @@ spec:
       restartPolicy: Never
       serviceAccount: kotsadm
       containers:
-          - name: delete-configmaps
-            image: {{ .Values.images.kotsadm }}
-            env:
-              - name: NAMESPACE
-                valueFrom:
-                  fieldRef:
-                    fieldPath: metadata.namespace
-            command:
-              - "/bin/sh"
-              - "-ec"
-              - "kubectl -n $NAMESPACE delete configmaps -l kots.io/kotsadm=true"
-          - name: delete-secrets
-            image: {{ .Values.images.kotsadm }}
-            env:
-              - name: NAMESPACE
-                valueFrom:
-                  fieldRef:
-                    fieldPath: metadata.namespace
-            command:
-              - "/bin/sh"
-              - "-ec"
-              - "kubectl -n $NAMESPACE delete secrets -l kots.io/kotsadm=true"
+        - name: delete-configmaps
+          image: {{ .Values.images.kotsadm }}
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          command:
+            - "/bin/sh"
+            - "-ec"
+            - "kubectl -n $NAMESPACE delete configmaps -l kots.io/kotsadm=true"
+        - name: delete-secrets
+          image: {{ .Values.images.kotsadm }}
+          env:
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          command:
+            - "/bin/sh"
+            - "-ec"
+            - "kubectl -n $NAMESPACE delete secrets -l kots.io/kotsadm=true"
