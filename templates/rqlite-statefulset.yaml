@@ -16,12 +16,12 @@ spec:
   selector:
     matchLabels:
       app: kotsadm-rqlite
-      {{- include "admin-console.immutableLabels" . | nindent 8 }}
   volumeClaimTemplates:
   - metadata:
       name: kotsadm-rqlite
       labels:
         app: kotsadm-rqlite
+        {{- include "admin-console.immutableLabels" . | nindent 8 }}
     spec:
       accessModes:
       - "ReadWriteOnce"
