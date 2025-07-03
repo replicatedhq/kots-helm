@@ -11,5 +11,5 @@ spec:
       protocol: TCP
       targetPort: http
   selector:
-    {{- include "admin-console.labels" . | nindent 4 }}
+    app: kotsadm
   type: ClusterIP
