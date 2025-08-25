@@ -41,10 +41,6 @@ spec:
         - name: EMBEDDED_CLUSTER_ID
           value: {{ .Values.embeddedClusterID | quote }}
 {{- end }}
-{{- if .Values.isEmbeddedClusterV3 }}
-        - name: IS_EMBEDDED_CLUSTER_V3
-          value: "true"
-{{- end }}
         volumeMounts:
         - name: kotsadm-config
           mountPath: /etc/kotsadm

@@ -103,10 +103,6 @@ spec:
         - name: EMBEDDED_CLUSTER_K0S_DIR
           value: {{ .Values.embeddedClusterK0sDir | quote }}
 {{- end }}
-{{- if .Values.isEmbeddedClusterV3 }}
-        - name: IS_EMBEDDED_CLUSTER_V3
-          value: "true"
-{{- end }}
         - name: DISABLE_OUTBOUND_CONNECTIONS
           value: {{ .Values.isAirgap | quote }}
 {{- if .Values.privateCAs.enabled }}
