@@ -131,7 +131,6 @@ spec:
           periodSeconds: 2
         resources:
           limits:
-            cpu: "1"
             memory: 2Gi
           requests:
             cpu: 100m
@@ -178,7 +177,6 @@ spec:
         name: schemahero-plan
         resources:
           limits:
-            cpu: 100m
             memory: 100Mi
           requests:
             cpu: 50m
@@ -203,7 +201,6 @@ spec:
         name: schemahero-apply
         resources:
           limits:
-            cpu: 100m
             memory: 100Mi
           requests:
             cpu: 50m
@@ -224,7 +221,6 @@ spec:
         name: restore-db
         resources:
           limits:
-            cpu: "1"
             memory: 2Gi
           requests:
             cpu: 100m
