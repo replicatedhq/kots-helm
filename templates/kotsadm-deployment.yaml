@@ -130,6 +130,9 @@ spec:
           initialDelaySeconds: 2
           periodSeconds: 2
         resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
           requests:
             cpu: 100m
             memory: 100Mi
@@ -174,6 +177,9 @@ spec:
         imagePullPolicy: IfNotPresent
         name: schemahero-plan
         resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
           requests:
             cpu: 50m
             memory: 50Mi
@@ -196,6 +202,9 @@ spec:
         imagePullPolicy: IfNotPresent
         name: schemahero-apply
         resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
           requests:
             cpu: 50m
             memory: 50Mi
@@ -214,6 +223,9 @@ spec:
         imagePullPolicy: IfNotPresent
         name: restore-db
         resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
           requests:
             cpu: 100m
             memory: 100Mi

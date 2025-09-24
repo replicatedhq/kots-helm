@@ -98,6 +98,9 @@ spec:
           timeoutSeconds: 10
           periodSeconds: 5
         resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
           requests:
             cpu: 100m
             memory: 256Mi
