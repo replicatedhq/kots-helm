@@ -46,9 +46,6 @@ spec:
         imagePullPolicy: IfNotPresent
         name: migrate-pvc-to-rqlite
         resources:
-          limits:
-            cpu: "1"
-            memory: 2Gi
           requests:
             cpu: 100m
             memory: 100Mi
