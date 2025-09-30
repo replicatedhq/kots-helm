@@ -6,6 +6,7 @@ metadata:
     kots.io/backup: velero
     kots.io/kotsadm: "true"
     troubleshoot.io/kind: support-bundle
+  runHostCollectorsInPod: true  # default is false 
 spec:
   # NOTE: This is commented out until we have a decision on how to handle this with custom domains.
   # uri: https://raw.githubusercontent.com/replicatedhq/kots-helm/main/troubleshoot/embedded-cluster-support-bundle.yaml
