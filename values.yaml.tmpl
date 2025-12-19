@@ -90,6 +90,25 @@ extraVolumeMounts: []
 # - name: host-ca-bundle
 #   mountPath: /certs/ca-certificates.crt
 
+# Resource configuration for kotsadm container
+kotsadm:
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      cpu: 100m
+      memory: 100Mi
+
+# Resource configuration for rqlite container
+rqlite:
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+
+# Deprecated: Use kotsadm.resources instead
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

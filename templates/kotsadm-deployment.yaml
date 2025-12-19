@@ -130,11 +130,7 @@ spec:
           initialDelaySeconds: 2
           periodSeconds: 2
         resources:
-          limits:
-            memory: 2Gi
-          requests:
-            cpu: 100m
-            memory: 100Mi
+          {{- toYaml .Values.kotsadm.resources | nindent 10 }}
         volumeMounts:
         - mountPath: /backup
           name: backup

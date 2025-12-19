@@ -98,8 +98,4 @@ spec:
           timeoutSeconds: 10
           periodSeconds: 5
         resources:
-          limits:
-            memory: 2Gi
-          requests:
-            cpu: 100m
-            memory: 256Mi
+          {{- toYaml .Values.rqlite.resources | nindent 10 }}
