@@ -11,13 +11,13 @@ jobs:
     steps:
     - name: Get tag
       id: tag
-      uses: dawidd6/action-get-tag@v1
-      with:
-        strip_v: true
+      run: |
+        tag="${GITHUB_REF_NAME#v}"
+        echo "tag=$tag" >> "$GITHUB_OUTPUT"
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v7
     - name: Install Helm
-      uses: azure/setup-helm@v1
+      uses: azure/setup-helm@v5.0.1
       with:
         version: v3.8.1
     - name: Run Package and Publish
