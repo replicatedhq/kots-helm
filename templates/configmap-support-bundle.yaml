@@ -6,4 +6,4 @@ metadata:
     {{- include "admin-console.labels" . | nindent 4 }}
     troubleshoot.sh/kind: support-bundle
 data:
-  support-bundle-spec: {{ .Files.Get "troubleshoot/embedded-cluster-support-bundle.yaml" | quote }}
+  support-bundle-spec: {{ .Files.Get "troubleshoot/embedded-cluster-support-bundle.yaml" | replace "_NAMESPACE_" .Release.Namespace | quote }}

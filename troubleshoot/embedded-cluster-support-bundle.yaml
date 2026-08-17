@@ -10,6 +10,9 @@ spec:
   # NOTE: This is commented out until we have a decision on how to handle this with custom domains.
   # uri: https://raw.githubusercontent.com/replicatedhq/kots-helm/main/troubleshoot/embedded-cluster-support-bundle.yaml
   collectors:
+  - clusterResources:
+      namespaces:
+      - _NAMESPACE_
   - logs:
       name: podlogs/kotsadm
       selector:
