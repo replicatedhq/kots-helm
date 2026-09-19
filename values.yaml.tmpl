@@ -98,6 +98,16 @@ kotsadm:
     requests:
       cpu: 100m
       memory: 100Mi
+  # Resource configuration for the restore-db init container, which restores
+  # the rqlite database during an Embedded Cluster disaster-recovery restore.
+  # Defaults higher than the main container so large-database restores don't
+  # OOMKill; override via unsupportedOverrides if a customer's DB is larger.
+  restoreDbResources:
+    limits:
+      memory: 4Gi
+    requests:
+      cpu: 100m
+      memory: 100Mi
 
 # Resource configuration for rqlite container
 rqlite:
