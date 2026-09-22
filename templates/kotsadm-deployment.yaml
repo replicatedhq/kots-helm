@@ -216,7 +216,7 @@ spec:
         imagePullPolicy: IfNotPresent
         name: restore-db
         resources:
-          {{- toYaml .Values.kotsadm.restoreDbResources | nindent 10 }}
+          {{- toYaml (index .Values.kotsadm "restore-db") | nindent 10 }}
         volumeMounts:
         - mountPath: /backup
           name: backup
