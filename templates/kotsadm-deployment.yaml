@@ -216,11 +216,7 @@ spec:
         imagePullPolicy: IfNotPresent
         name: restore-db
         resources:
-          limits:
-            memory: 2Gi
-          requests:
-            cpu: 100m
-            memory: 100Mi
+          {{- toYaml (index .Values.kotsadm "restore-db") | nindent 10 }}
         volumeMounts:
         - mountPath: /backup
           name: backup
