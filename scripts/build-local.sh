@@ -5,6 +5,7 @@ set -e
 export CURRENT_USER=${GITHUB_USER:-$(id -u -n)}
 export KOTS_VERSION=$1
 export KOTS_TAG=v${KOTS_VERSION}
+export RQLITE_TAG=latest
 export KOTSADM_REGISTRY=kotsadm # docker.io is implicit
 export CHART_VERSION=${KOTS_VERSION}
 
