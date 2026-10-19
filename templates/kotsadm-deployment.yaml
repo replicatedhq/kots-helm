@@ -154,6 +154,36 @@ spec:
         {{- toYaml .Values.extraVolumeMounts | nindent 8 }}
 {{- end }}
       initContainers:
+      # Wait for rqlite before running migrations, so schemahero-plan does not
+      # crash loop when kotsadm and rqlite start at the same time (e.g. after
+      # a full cluster restart). Times out after 5 minutes.
+      - args:
+        - |-
+          timeout=300
+          start=$(date +%s)
+          deadline=$((start+timeout))
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            if wget -qO- -T 5 http://kotsadm-rqlite:4001/readyz 2>/dev/null | grep -q "ok"; then
+              echo "rqlite is ready ($(( $(date +%s)-start ))s)"
+              exit 0
+            fi
+            echo "Waiting for rqlite... ($(( $(date +%s)-start ))s/${timeout}s)"
+            sleep 2
+          done
+          echo "ERROR: rqlite not ready after ${timeout}s"
+          exit 1
+        command:
+        - sh
+        - -c
+        image: {{ .Values.images.migrations }}
+        imagePullPolicy: IfNotPresent
+        name: wait-for-rqlite
+        resources:
+          limits:
+            memory: 50Mi
+          requests:
+            cpu: 10m
+            memory: 10Mi
       - args:
         - plan
         env:
