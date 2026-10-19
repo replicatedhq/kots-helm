@@ -160,15 +160,15 @@ spec:
       - args:
         - |-
           timeout=300
-          elapsed=0
-          while [ $elapsed -lt $timeout ]; do
-            if wget -qO- http://kotsadm-rqlite:4001/readyz 2>/dev/null | grep -q "ok"; then
-              echo "rqlite is ready (${elapsed}s)"
+          start=$(date +%s)
+          deadline=$((start+timeout))
+          while [ "$(date +%s)" -lt "$deadline" ]; do
+            if wget -qO- -T 5 http://kotsadm-rqlite:4001/readyz 2>/dev/null | grep -q "ok"; then
+              echo "rqlite is ready ($(( $(date +%s)-start ))s)"
               exit 0
             fi
-            echo "Waiting for rqlite... (${elapsed}s/${timeout}s)"
+            echo "Waiting for rqlite... ($(( $(date +%s)-start ))s/${timeout}s)"
             sleep 2
-            elapsed=$((elapsed+2))
           done
           echo "ERROR: rqlite not ready after ${timeout}s"
           exit 1
